@@ -13,7 +13,7 @@ class SearchTmdb
 
   @override
   Future<Either<NetworkError, ResultsModel>> execute(SearchTmdbParams params) {
-    return _tmdbRepository.searchTMDB(params);
+    return _tmdbRepository.searchTMDB(params.searchQuery);
   }
 }
 

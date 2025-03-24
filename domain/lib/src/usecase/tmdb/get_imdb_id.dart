@@ -13,7 +13,7 @@ class GetIMDBID
 
   @override
   Future<Either<NetworkError, ResultsModel>> execute(GetIMDBIDParams params) {
-    return _tmdbRepository.getIMDBID(params);
+    return _tmdbRepository.getIMDBID(params.tmdbID);
   }
 }
 
