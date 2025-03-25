@@ -1,42 +1,47 @@
 import 'package:dartz/dartz.dart';
 import 'package:doh_api_client/doh_api_client.dart';
 import 'package:domain/domain.dart';
+import 'package:injectable/injectable.dart';
 
+@injectable
 class APIClient {
   final _apiClient = DohApiClient();
 
   APIClient() {
-    _apiClient.addInterceptor(PrettyDohLogger());
+    _apiClient.addInterceptor(
+        PrettyDohLogger(requestHeader: true, requestBody: true));
   }
 
-  Future<Either<NetworkError, DohResponse>> getRequest(String url) async {
+  Future<Either<GenericError, DohResponse>> getRequest(
+      {required String url, Map<String, dynamic>? headers}) async {
     try {
-      final response = await _apiClient.get(url: url);
+      final response = await _apiClient.get(url: url, headers: headers);
 
       if (response.statusCode == 200) {
         return right(response);
       } else {
         return left(
-          NetworkError(
-            httpError: response.statusCode,
+          GenericError(
+            errorCode: response.statusCode,
             message: response.message,
             cause: Exception(response.data),
           ),
         );
       }
     } catch (e) {
-      return left(NetworkError(
-          httpError: 504, message: "Unknown Exception", cause: e as Exception));
+      return left(GenericError(
+          errorCode: 504, message: "Unknown Exception", cause: Exception(e)));
     }
   }
 
-  Either<NetworkError, M> apiSafeGuard<M>(
-      data, M Function(Map<String, dynamic> dataMap) onTransform) {
+  Either<GenericError, M> apiSafeGuard<M>(
+      Either<GenericError, DohResponse> data,
+      M Function(Map<String, dynamic> dataMap) onTransform) {
     try {
-      final dataMap = (data as DohResponse).data;
-      return Right(onTransform(dataMap));
+      return data.fold(
+          (GenericError e) => Left(e), (DohResponse d) => Right(onTransform(d.data)));
     } catch (e) {
-      return Left(NetworkError(cause: Exception(e), httpError: 0));
+      return Left(GenericError(cause: Exception(e), errorCode: 0));
     }
   }
 }

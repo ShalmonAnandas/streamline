@@ -1,12 +1,12 @@
 import 'package:domain/src/model/error/base_error.dart';
 import 'package:domain/src/model/error/error_info.dart';
 
-class NetworkError extends BaseError {
-  NetworkError({
-    required int httpError,
+class GenericError extends BaseError {
+  GenericError({
+    required int errorCode,
     String message = "",
     required super.cause,
-  }) : super(error: ErrorInfo(code: httpError, message: message));
+  }) : super(error: ErrorInfo(code: errorCode, message: message));
 
   @override
   String getFriendlyMessage() {

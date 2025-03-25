@@ -9,7 +9,7 @@ part of 'results_model.dart';
 ResultsModel _$ResultsModelFromJson(Map<String, dynamic> json) => ResultsModel(
       page: (json['page'] as num?)?.toInt(),
       results: (json['results'] as List<dynamic>?)
-          ?.map((e) => MediaModel.fromJson(e as Map<String, dynamic>))
+          ?.map((e) => MediaModel.fromJson(Map<String, dynamic>.from(e)))
           .toList(),
       totalPages: (json['total_pages'] as num?)?.toInt(),
       totalResults: (json['total_results'] as num?)?.toInt(),
@@ -17,8 +17,9 @@ ResultsModel _$ResultsModelFromJson(Map<String, dynamic> json) => ResultsModel(
 
 Map<String, dynamic> _$ResultsModelToJson(ResultsModel instance) =>
     <String, dynamic>{
-      'page': instance.page,
-      'results': instance.results,
-      'total_pages': instance.totalPages,
-      'total_results': instance.totalResults,
+      if (instance.page case final value?) 'page': value,
+      if (instance.results?.map((e) => e.toJson()).toList() case final value?)
+        'results': value,
+      if (instance.totalPages case final value?) 'total_pages': value,
+      if (instance.totalResults case final value?) 'total_results': value,
     };

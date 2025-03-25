@@ -6,14 +6,16 @@ import 'package:domain/src/model/tmdb/results/results_model.dart';
 import 'package:domain/src/repository/tmdb_repository.dart';
 import 'package:domain/src/usecase/base/base_usecase.dart';
 import 'package:domain/src/usecase/base/params.dart';
+import 'package:injectable/injectable.dart';
 
-class GetTrendingShows extends BaseUseCase <NetworkError, NoParams, ResultsModel>{
+@injectable
+class GetTrendingShows extends BaseUseCase <GenericError, NoParams, ResultsModel>{
   final TMDBRepository _tmdbRepository;
 
   GetTrendingShows(this._tmdbRepository);
 
   @override
-  Future<Either<NetworkError, ResultsModel>> execute(NoParams params) {
-    return _tmdbRepository.getTrendingTv();
+  Future<Either<GenericError, ResultsModel>> execute(NoParams params) {
+    return _tmdbRepository.getTrendingShows();
   }
 }
