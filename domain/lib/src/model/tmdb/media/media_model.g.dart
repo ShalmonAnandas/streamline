@@ -8,11 +8,11 @@ part of 'media_model.dart';
 
 MediaModel _$MediaModelFromJson(Map<String, dynamic> json) => MediaModel(
       backdropPath: json['backdrop_path'] as String?,
-      id: (json['id'] as num?)?.toInt(),
-      titleFromAPI: json['titleFromAPI'] as String?,
-      nameFromAPI: json['nameFromAPI'] as String?,
-      originalTitleFromAPI: json['original_title'] as String?,
-      originalNameFromAPI: json['original_name'] as String?,
+      tmdbId: (json['tmdbId'] as num?)?.toInt(),
+      title: json['title'] as String?,
+      name: json['name'] as String?,
+      originalTitle: json['original_title'] as String?,
+      originalName: json['original_name'] as String?,
       overview: json['overview'] as String?,
       posterPath: json['poster_path'] as String?,
       mediaType: json['media_type'] as String?,
@@ -33,11 +33,11 @@ MediaModel _$MediaModelFromJson(Map<String, dynamic> json) => MediaModel(
 Map<String, dynamic> _$MediaModelToJson(MediaModel instance) =>
     <String, dynamic>{
       'backdrop_path': instance.backdropPath,
-      'id': instance.id,
-      'titleFromAPI': instance.titleFromAPI,
-      'nameFromAPI': instance.nameFromAPI,
-      'original_title': instance.originalTitleFromAPI,
-      'original_name': instance.originalNameFromAPI,
+      'tmdbId': instance.tmdbId,
+      'title': instance.title,
+      'name': instance.name,
+      'original_title': instance.originalTitle,
+      'original_name': instance.originalName,
       'overview': instance.overview,
       'poster_path': instance.posterPath,
       'media_type': instance.mediaType,

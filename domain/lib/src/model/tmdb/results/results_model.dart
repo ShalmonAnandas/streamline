@@ -17,6 +17,7 @@ class ResultsModel extends Equatable {
   });
 
   final int? page;
+  
   final List<MediaModel>? results;
 
   @JsonKey(name: 'total_pages')

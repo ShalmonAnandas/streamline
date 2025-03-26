@@ -13,7 +13,7 @@ class TMDBLocalDsImpl extends TMDBLocalDs {
   Future<ResultsModel?> getTrendingMovies() async {
     final cachedData = await _cacheService.getFromCache<Map>("trending_movies");
 
-    if(cachedData != null){
+    if (cachedData != null) {
       return ResultsModel.fromJson(Map<String, dynamic>.from(cachedData));
     } else {
       return null;
@@ -22,7 +22,14 @@ class TMDBLocalDsImpl extends TMDBLocalDs {
 
   @override
   Future<ResultsModel?> getTrendingShows() async {
-    return await _cacheService.getFromCache<ResultsModel?>("trending_shows");
+    final cachedData = await _cacheService
+        .getFromCache<Map<String, dynamic>>("trending_shows");
+
+    if (cachedData != null) {
+      return ResultsModel.fromJson(Map<String, dynamic>.from(cachedData));
+    } else {
+      return null;
+    }
   }
 
   @override

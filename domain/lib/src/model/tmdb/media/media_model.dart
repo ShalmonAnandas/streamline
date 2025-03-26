@@ -7,11 +7,11 @@ part 'media_model.g.dart';
 class MediaModel extends Equatable {
   MediaModel({
     required this.backdropPath,
-    required this.id,
-    required this.titleFromAPI,
-    required this.nameFromAPI,
-    required this.originalTitleFromAPI,
-    required this.originalNameFromAPI,
+    required this.tmdbId,
+    required this.title,
+    required this.name,
+    required this.originalTitle,
+    required this.originalName,
     required this.overview,
     required this.posterPath,
     required this.mediaType,
@@ -27,19 +27,16 @@ class MediaModel extends Equatable {
 
   @JsonKey(name: 'backdrop_path')
   final String? backdropPath;
-  final int? id;
-  final String? titleFromAPI;
-  final String? nameFromAPI;
 
-  String? get title => titleFromAPI ?? nameFromAPI;
+  final int? tmdbId;
+  final String? title;
+  final String? name;
 
   @JsonKey(name: 'original_title')
-  final String? originalTitleFromAPI;
+  final String? originalTitle;
 
   @JsonKey(name: 'original_name')
-  final String? originalNameFromAPI;
-
-  String? get originalTitle => originalTitleFromAPI ?? originalNameFromAPI;
+  final String? originalName;
 
   final String? overview;
 
@@ -88,11 +85,11 @@ class MediaModel extends Equatable {
   }) {
     return MediaModel(
       backdropPath: backdropPath ?? this.backdropPath,
-      id: id ?? this.id,
-      titleFromAPI: titleFromAPI ?? this.titleFromAPI,
-      nameFromAPI: nameFromAPI ?? this.nameFromAPI,
-      originalTitleFromAPI: originalTitleFromAPI ?? this.originalTitleFromAPI,
-      originalNameFromAPI: originalNameFromAPI ?? this.originalNameFromAPI,
+      tmdbId: id ?? this.tmdbId,
+      title: titleFromAPI ?? this.title,
+      name: nameFromAPI ?? this.name,
+      originalTitle: originalTitleFromAPI ?? this.originalTitle,
+      originalName: originalNameFromAPI ?? this.originalName,
       overview: overview ?? this.overview,
       posterPath: posterPath ?? this.posterPath,
       mediaType: mediaType ?? this.mediaType,
@@ -114,15 +111,15 @@ class MediaModel extends Equatable {
 
   @override
   String toString() {
-    return "$backdropPath, $id, $titleFromAPI, $originalTitleFromAPI, $overview, $posterPath, $mediaType, $adult, $originalLanguage, $genreIds, $popularity, $releaseDate, $video, $voteAverage, $voteCount, ";
+    return "$backdropPath, $tmdbId, $title, $originalTitle, $overview, $posterPath, $mediaType, $adult, $originalLanguage, $genreIds, $popularity, $releaseDate, $video, $voteAverage, $voteCount, ";
   }
 
   @override
   List<Object?> get props => [
         backdropPath,
-        id,
-        titleFromAPI,
-        originalTitleFromAPI,
+        tmdbId,
+        title,
+        originalTitle,
         overview,
         posterPath,
         mediaType,

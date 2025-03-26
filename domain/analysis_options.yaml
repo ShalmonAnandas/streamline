@@ -22,6 +22,8 @@ include: package:lints/recommended.yaml
 analyzer:
   plugins:
       - custom_lint
+  errors:
+    invalid_annotation_target: ignore
 #   exclude:
 #     - path/to/excluded/files/**
 
