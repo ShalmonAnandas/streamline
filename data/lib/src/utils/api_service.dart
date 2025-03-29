@@ -8,8 +8,7 @@ class APIClient {
   final _apiClient = DohApiClient();
 
   APIClient() {
-    _apiClient.addInterceptor(
-        PrettyDohLogger(requestHeader: true, requestBody: true));
+    _apiClient.addInterceptor(PrettyDohLogger());
   }
 
   Future<Either<GenericError, DohResponse>> getRequest(
@@ -38,8 +37,8 @@ class APIClient {
       Either<GenericError, DohResponse> data,
       M Function(Map<String, dynamic> dataMap) onTransform) {
     try {
-      return data.fold(
-          (GenericError e) => Left(e), (DohResponse d) => Right(onTransform(d.data)));
+      return data.fold((GenericError e) => Left(e),
+          (DohResponse d) => Right(onTransform(d.data)));
     } catch (e) {
       return Left(GenericError(cause: Exception(e), errorCode: 0));
     }

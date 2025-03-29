@@ -8,7 +8,7 @@ part of 'media_model.dart';
 
 MediaModel _$MediaModelFromJson(Map<String, dynamic> json) => MediaModel(
       backdropPath: json['backdrop_path'] as String?,
-      tmdbId: (json['tmdbId'] as num?)?.toInt(),
+      id: (json['id'] as num?)?.toInt(),
       title: json['title'] as String?,
       name: json['name'] as String?,
       originalTitle: json['original_title'] as String?,
@@ -22,9 +22,7 @@ MediaModel _$MediaModelFromJson(Map<String, dynamic> json) => MediaModel(
           ?.map((e) => (e as num).toInt())
           .toList(),
       popularity: (json['popularity'] as num?)?.toDouble(),
-      releaseDate: json['release_date'] == null
-          ? null
-          : DateTime.parse(json['release_date'] as String),
+      releaseDate: json['release_date'] as String?,
       video: json['video'] as bool?,
       voteAverage: (json['vote_average'] as num?)?.toDouble(),
       voteCount: (json['vote_count'] as num?)?.toInt(),
@@ -33,7 +31,7 @@ MediaModel _$MediaModelFromJson(Map<String, dynamic> json) => MediaModel(
 Map<String, dynamic> _$MediaModelToJson(MediaModel instance) =>
     <String, dynamic>{
       'backdrop_path': instance.backdropPath,
-      'tmdbId': instance.tmdbId,
+      'id': instance.id,
       'title': instance.title,
       'name': instance.name,
       'original_title': instance.originalTitle,
@@ -45,7 +43,7 @@ Map<String, dynamic> _$MediaModelToJson(MediaModel instance) =>
       'original_language': instance.originalLanguage,
       'genre_ids': instance.genreIds,
       'popularity': instance.popularity,
-      'release_date': instance.releaseDate?.toIso8601String(),
+      'release_date': instance.releaseDate,
       'video': instance.video,
       'vote_average': instance.voteAverage,
       'vote_count': instance.voteCount,

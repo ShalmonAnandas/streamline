@@ -10,20 +10,9 @@ class TMDBLocalDsImpl extends TMDBLocalDs {
   TMDBLocalDsImpl(this._cacheService);
 
   @override
-  Future<ResultsModel?> getTrendingMovies() async {
-    final cachedData = await _cacheService.getFromCache<Map>("trending_movies");
-
-    if (cachedData != null) {
-      return ResultsModel.fromJson(Map<String, dynamic>.from(cachedData));
-    } else {
-      return null;
-    }
-  }
-
-  @override
-  Future<ResultsModel?> getTrendingShows() async {
+  Future<ResultsModel?> getTrending(GetTrendingParams params) async {
     final cachedData = await _cacheService
-        .getFromCache<Map<String, dynamic>>("trending_shows");
+        .getFromCache<Map>("trending_${params.mediaType}_${params.page}");
 
     if (cachedData != null) {
       return ResultsModel.fromJson(Map<String, dynamic>.from(cachedData));
@@ -33,12 +22,8 @@ class TMDBLocalDsImpl extends TMDBLocalDs {
   }
 
   @override
-  void cacheTrendingMovies<T>(T data) {
-    _cacheService.putInCache<T>("trending_movies", data);
-  }
-
-  @override
-  void cacheTrendingShows<T>(T data) {
-    _cacheService.putInCache<T>("trending_shows", data);
+  void cacheTrending<T>(T data, GetTrendingParams params) {
+    _cacheService.putInCache<T>(
+        "trending_${params.mediaType}_${params.page}", data);
   }
 }

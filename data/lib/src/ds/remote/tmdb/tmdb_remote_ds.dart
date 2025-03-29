@@ -1,9 +1,9 @@
-import 'package:data/src/utils/typedefs.dart';
+import 'package:dartz/dartz.dart';
 import 'package:domain/domain.dart';
 
 abstract class TMDBRemoteDs {
-  Future<TMDBReturnType> getTrendingMovies();
-  Future<TMDBReturnType> getTrendingShows();
-  Future<TMDBReturnType> getIMDBID(GetIMDBIDParams params);
-  Future<TMDBReturnType> searchTMDB(String searchQuery);
+  Future<Either<GenericError, ResultsModel>> getTrending(
+      GetTrendingParams params);
+  Future<Either<GenericError, ResultsModel>> getIMDBID(GetIMDBIDParams params);
+  Future<Either<GenericError, ResultsModel>> searchTMDB(String searchQuery);
 }

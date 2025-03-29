@@ -21,18 +21,11 @@ class TMDBRemoteDSImpl extends TMDBRemoteDs with ApiConstants {
   }
 
   @override
-  Future<Either<GenericError, ResultsModel>> getTrendingMovies() async {
+  Future<Either<GenericError, ResultsModel>> getTrending(
+      GetTrendingParams params) async {
     final response = await _apiClient.getRequest(
-        url: tmdbTrendingMoviesUrl, headers: tmdbHeaders);
-
-    return _apiClient.apiSafeGuard<ResultsModel>(
-        response, ResultsModel.fromJson);
-  }
-
-  @override
-  Future<Either<GenericError, ResultsModel>> getTrendingShows() async {
-    final response = await _apiClient.getRequest(
-        url: tmdbTrendingShowsURL, headers: tmdbHeaders);
+        url: tmdbTrendingUrl(params.mediaType, params.page),
+        headers: tmdbHeaders);
 
     return _apiClient.apiSafeGuard<ResultsModel>(
         response, ResultsModel.fromJson);
@@ -43,9 +36,18 @@ class TMDBRemoteDSImpl extends TMDBRemoteDs with ApiConstants {
     String searchQuery,
   ) async {
     final response = await _apiClient.getRequest(
-        url: tmdbSearchURL + searchQuery, headers: tmdbHeaders);
+      url: '$tmdbSearchURL$searchQuery',
+      headers: tmdbHeaders,
+    );
 
-    return _apiClient.apiSafeGuard<ResultsModel>(
-        response, ResultsModel.fromJson);
+    final resultModel = _apiClient.apiSafeGuard<ResultsModel>(
+      response,
+      ResultsModel.fromJson,
+    );
+
+    return resultModel.map((model) {
+      model.results?.removeWhere((element) => element.mediaType == "person");
+      return model;
+    });
   }
 }

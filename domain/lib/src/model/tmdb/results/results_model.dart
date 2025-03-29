@@ -4,10 +4,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'results_model.g.dart';
 
-@JsonSerializable(
-  explicitToJson: true,
-  includeIfNull: false
-)
+@JsonSerializable(explicitToJson: true, includeIfNull: false)
 class ResultsModel extends Equatable {
   ResultsModel({
     required this.page,
@@ -17,7 +14,7 @@ class ResultsModel extends Equatable {
   });
 
   final int? page;
-  
+
   final List<MediaModel>? results;
 
   @JsonKey(name: 'total_pages')

@@ -10,14 +10,14 @@ environment:
 # Add regular dependencies here.
 dependencies:
   dartz: ^0.10.1
-  doh_api_client: ^1.0.8
+  doh_api_client: ^1.1.0
   get_it: ^8.0.3
   injectable: ^2.5.0
   json_annotation: ^4.9.0
   equatable: ^2.0.7
   path_provider: ^2.1.0
   sembast: ^3.8.3
-  path: ^1.9.1
+  path: ^1.9.0
 
   domain:
     path: ../domain

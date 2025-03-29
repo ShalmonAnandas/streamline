@@ -9,6 +9,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "80.0.0"
+  amicons:
+    dependency: "direct main"
+    description:
+      name: amicons
+      sha256: b0216f8c4e205853650fec7fc6baa23fb996c114bf6320bbf1dbb801d352e86f
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.1"
   analyzer:
     dependency: transitive
     description:
@@ -268,10 +276,10 @@ packages:
     dependency: transitive
     description:
       name: doh_api_client
-      sha256: "22f5d74880ae53a19f518bac08a7ee84def4dba1fbc632c80202f11ad8dea42f"
+      sha256: aa8dda843a9435091fa6942ca6548506a54b68780cdd8aab481c2a46a3f40c3d
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.8"
+    version: "1.1.0"
   domain:
     dependency: "direct main"
     description:
@@ -319,6 +327,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.1.1"
+  flashy_tab_bar2:
+    dependency: "direct main"
+    description:
+      name: flashy_tab_bar2
+      sha256: "4c2a8cb2b3f96e84a6baf4fd6e20801fbdf7ebc027d8d8d9d13a0ab8907f7bec"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.10"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -385,6 +401,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.3"
+  google_fonts:
+    dependency: "direct main"
+    description:
+      name: google_fonts
+      sha256: b1ac0fe2832c9cc95e5e88b57d627c5e68c223b9657f4b96e1487aa9098c7b82
+      url: "https://pub.dev"
+    source: hosted
+    version: "6.2.1"
   graphs:
     dependency: transitive
     description:

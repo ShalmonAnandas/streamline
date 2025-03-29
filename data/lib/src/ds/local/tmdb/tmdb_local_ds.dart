@@ -1,9 +1,6 @@
 import 'package:domain/domain.dart';
 
 abstract class TMDBLocalDs {
-  Future<ResultsModel?> getTrendingMovies();
-  Future<ResultsModel?> getTrendingShows();
-
-  void cacheTrendingMovies<T>(T data);
-  void cacheTrendingShows<T>(T data);
+  Future<ResultsModel?> getTrending(GetTrendingParams params);
+  void cacheTrending<T>(T data, GetTrendingParams params);
 }

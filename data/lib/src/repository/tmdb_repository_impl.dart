@@ -12,42 +12,42 @@ class TMDBRepositoryImpl extends TMDBRepository {
   final TMDBRemoteDs _tmdbRemoteDs;
 
   @override
-  Future<Either<GenericError, ResultsModel>> getIMDBID(
+  Future<Either<GenericError, List<MediaModel>?>> getIMDBID(
       GetIMDBIDParams params) async {
-    return await _tmdbRemoteDs.getIMDBID(params);
+    final results = await _tmdbRemoteDs.getIMDBID(params);
+
+    return results.fold((GenericError error) => left(error),
+        (ResultsModel results) {
+      return right(results.results);
+    });
   }
 
   @override
-  Future<Either<GenericError, ResultsModel>> getTrendingMovies() async {
-    final result = await _tmdbLocalDs.getTrendingMovies();
+  Future<Either<GenericError, List<MediaModel>?>> getTrending(
+      GetTrendingParams params) async {
+    final result = await _tmdbLocalDs.getTrending(params);
 
     if (result == null) {
-      final remoteResult = await _tmdbRemoteDs.getTrendingMovies();
-      remoteResult.fold((GenericError e) => e,
-          (ResultsModel m) => _tmdbLocalDs.cacheTrendingMovies<ResultsModel>(m));
-      return remoteResult;
+      final remoteResult = await _tmdbRemoteDs.getTrending(params);
+      remoteResult.fold(
+          (GenericError e) => e,
+          (ResultsModel m) =>
+              _tmdbLocalDs.cacheTrending<ResultsModel>(m, params));
+      return remoteResult.fold(
+          (GenericError e) => left(e), (ResultsModel m) => right(m.results));
     } else {
-      return right(result);
+      return right(result.results);
     }
   }
 
   @override
-  Future<Either<GenericError, ResultsModel>> getTrendingShows() async {
-    final result = await _tmdbLocalDs.getTrendingShows();
-
-    if (result == null) {
-      final remoteResult = await _tmdbRemoteDs.getTrendingShows();
-      remoteResult.fold((GenericError e) => e,
-          (ResultsModel m) => _tmdbLocalDs.cacheTrendingShows<ResultsModel>(m));
-      return remoteResult;
-    } else {
-      return right(result);
-    }
-  }
-
-  @override
-  Future<Either<GenericError, ResultsModel>> searchTMDB(
+  Future<Either<GenericError, List<MediaModel>?>> searchTMDB(
       String searchQuery) async {
-    return await _tmdbRemoteDs.searchTMDB(searchQuery);
+    final results = await _tmdbRemoteDs.searchTMDB(searchQuery);
+
+    return results.fold((GenericError error) => left(error),
+        (ResultsModel results) {
+      return right(results.results);
+    });
   }
 }

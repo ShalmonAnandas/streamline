@@ -7,7 +7,7 @@ part 'media_model.g.dart';
 class MediaModel extends Equatable {
   MediaModel({
     required this.backdropPath,
-    required this.tmdbId,
+    required this.id,
     required this.title,
     required this.name,
     required this.originalTitle,
@@ -28,7 +28,7 @@ class MediaModel extends Equatable {
   @JsonKey(name: 'backdrop_path')
   final String? backdropPath;
 
-  final int? tmdbId;
+  final int? id;
   final String? title;
   final String? name;
 
@@ -55,7 +55,7 @@ class MediaModel extends Equatable {
   final double? popularity;
 
   @JsonKey(name: 'release_date')
-  final DateTime? releaseDate;
+  final String? releaseDate;
   final bool? video;
 
   @JsonKey(name: 'vote_average')
@@ -67,10 +67,10 @@ class MediaModel extends Equatable {
   MediaModel copyWith({
     String? backdropPath,
     int? id,
-    String? titleFromAPI,
-    String? nameFromAPI,
-    String? originalTitleFromAPI,
-    String? originalNameFromAPI,
+    String? title,
+    String? name,
+    String? originalTitle,
+    String? originalName,
     String? overview,
     String? posterPath,
     String? mediaType,
@@ -78,18 +78,18 @@ class MediaModel extends Equatable {
     String? originalLanguage,
     List<int>? genreIds,
     double? popularity,
-    DateTime? releaseDate,
+    String? releaseDate,
     bool? video,
     double? voteAverage,
     int? voteCount,
   }) {
     return MediaModel(
       backdropPath: backdropPath ?? this.backdropPath,
-      tmdbId: id ?? this.tmdbId,
-      title: titleFromAPI ?? this.title,
-      name: nameFromAPI ?? this.name,
-      originalTitle: originalTitleFromAPI ?? this.originalTitle,
-      originalName: originalNameFromAPI ?? this.originalName,
+      id: id ?? this.id,
+      title: title ?? this.title,
+      name: name ?? this.name,
+      originalTitle: originalTitle ?? this.originalTitle,
+      originalName: originalName ?? this.originalName,
       overview: overview ?? this.overview,
       posterPath: posterPath ?? this.posterPath,
       mediaType: mediaType ?? this.mediaType,
@@ -111,13 +111,13 @@ class MediaModel extends Equatable {
 
   @override
   String toString() {
-    return "$backdropPath, $tmdbId, $title, $originalTitle, $overview, $posterPath, $mediaType, $adult, $originalLanguage, $genreIds, $popularity, $releaseDate, $video, $voteAverage, $voteCount, ";
+    return "$backdropPath, $id, $title, $originalTitle, $overview, $posterPath, $mediaType, $adult, $originalLanguage, $genreIds, $popularity, $releaseDate, $video, $voteAverage, $voteCount, ";
   }
 
   @override
   List<Object?> get props => [
         backdropPath,
-        tmdbId,
+        id,
         title,
         originalTitle,
         overview,

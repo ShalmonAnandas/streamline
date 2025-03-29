@@ -6,28 +6,28 @@ import 'package:domain/src/usecase/base/base_usecase.dart';
 import 'package:domain/src/usecase/base/params.dart';
 import 'package:injectable/injectable.dart';
 
-/// Use case for retrieving the IMDb ID for a given TMDB ID and media type.
+/// Use case for retrieving trending media from TMDB.
 ///
-/// This use case interacts with the `TMDBRepository` to fetch the IMDb ID
-/// associated with a specific TMDB ID and media type (e.g., movie or TV show).
+/// This use case interacts with the `TMDBRepository` to fetch a list of trending media
+/// (e.g., movies or TV shows) based on the specified media type and page number.
 ///
 /// Extends:
-/// - `BaseUseCase<GenericError, GetIMDBIDParams, List<MediaModel>?>`
+/// - `BaseUseCase<GenericError, GetTrendingParams, List<MediaModel>?>`
 ///   - `GenericError`: Represents the type of error that can occur during execution.
-///   - `GetIMDBIDParams`: Represents the input parameters required for the use case.
+///   - `GetTrendingParams`: Represents the input parameters required for the use case.
 ///   - `List<MediaModel>?`: Represents the result of the use case, which is a list of media models or null.
 @injectable
-class GetIMDBID
-    extends BaseUseCase<GenericError, GetIMDBIDParams, List<MediaModel>?> {
+class GetTrending
+    extends BaseUseCase<GenericError, GetTrendingParams, List<MediaModel>?> {
   final TMDBRepository _tmdbRepository;
 
   /// Constructor that initializes the use case with a `TMDBRepository` instance.
-  GetIMDBID(this._tmdbRepository);
+  GetTrending(this._tmdbRepository);
 
   /// Executes the use case with the provided parameters.
   ///
   /// Parameters:
-  /// - `params`: An instance of `GetIMDBIDParams` containing the TMDB ID and media type.
+  /// - `params`: An instance of `GetTrendingParams` containing the media type and page number.
   ///
   /// Returns:
   /// - A `Future` of `Either<GenericError, List<MediaModel>?>`:
@@ -35,29 +35,29 @@ class GetIMDBID
   ///   - `Right<List<MediaModel>?>`: Represents the result, which is a list of media models or null.
   @override
   Future<Either<GenericError, List<MediaModel>?>> execute(
-      GetIMDBIDParams params) {
-    return _tmdbRepository.getIMDBID(params);
+      GetTrendingParams params) async {
+    return await _tmdbRepository.getTrending(params);
   }
 }
 
-/// Parameters required for the `GetIMDBID` use case.
+/// Parameters required for the `GetTrending` use case.
 ///
-/// Contains the TMDB ID and media type needed to fetch the IMDb ID.
-class GetIMDBIDParams extends Params {
-  final String tmdbID; // The TMDB ID of the media.
-  final String mediaType; // The type of media (e.g., "movie", "tv").
-
+/// Contains the media type and page number needed to fetch the trending media.
+class GetTrendingParams extends Params {
   /// Constructor for initializing the parameters.
   ///
   /// Parameters:
-  /// - `tmdbID`: The TMDB ID of the media.
   /// - `mediaType`: The type of media (e.g., "movie", "tv").
-  GetIMDBIDParams({required this.tmdbID, required this.mediaType});
+  /// - `page`: The page number for pagination.
+  GetTrendingParams(this.mediaType, this.page);
+
+  final String mediaType; // The type of media (e.g., "movie", "tv").
+  final int page; // The page number for pagination.
 
   /// Converts the parameters into a JSON-compatible map.
   ///
-  /// Throws:
-  /// - `UnimplementedError`: This method is not implemented for this class.
+  /// Returns:
+  /// - A `Map<String, dynamic>` containing the media type and page number.
   @override
-  Map<String, dynamic> get toJson => throw UnimplementedError();
+  Map<String, dynamic> get toJson => {"media_type": mediaType, "page": page};
 }

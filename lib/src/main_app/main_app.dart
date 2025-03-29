@@ -12,9 +12,7 @@ class MainApp extends StatelessWidget {
       navigatorKey: AppService.navigatorKey,
       title: "StreamLine",
       theme: ThemeData.dark(),
-      home: const Scaffold(
-        body: HomeScreen()
-      ),
+      home: const Scaffold(body: HomeScreen()),
     );
   }
 }
