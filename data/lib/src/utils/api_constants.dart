@@ -1,13 +1,22 @@
 import 'package:domain/domain.dart';
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 
 mixin ApiConstants {
+  static final remoteConfig = FirebaseRemoteConfig.instance;
+
   final String tmdbBaseUrl = "https://api.themoviedb.org";
 
-  final Map<String, dynamic> tmdbHeaders = {
-    "accept": "application/json",
-    "Authorization":
-        "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI3ZjRlNmEyYTA4M2U2MzQzMTU5YmFkNzM2ZDljZmNlMyIsIm5iZiI6MTY0NjEyNjY5NC40ODg5OTk4LCJzdWIiOiI2MjFkZTY2NmQzOGI1ODAwMWJmNDQzNzUiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.1ZXqE3RCXzihx5TsaGf6p_g_OSISmGPTbiGmKZjA61Y"
-  };
+  // Cache for the Authorization token
+  String? _cachedAuthorizationToken;
+
+  Map<String, dynamic> get tmdbHeaders {
+    // Fetch the token only if it hasn't been cached
+    _cachedAuthorizationToken ??= remoteConfig.getString('TMDB_API_KEY');
+    return {
+      "accept": "application/json",
+      "Authorization": "Bearer $_cachedAuthorizationToken",
+    };
+  }
 
   String tmdbTrendingUrl(String mediaType, int page) {
     return "$tmdbBaseUrl/3/trending/$mediaType/day?language=en-US&page=$page";

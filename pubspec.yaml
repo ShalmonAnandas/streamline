@@ -24,6 +24,9 @@ dependencies:
   flashy_tab_bar2: ^0.0.10
   google_fonts: ^6.2.1
 
+  # firebase
+  firebase_core: ^3.12.1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

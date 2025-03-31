@@ -21,6 +21,10 @@ dependencies:
 
   domain:
     path: ../domain
+
+  # firebase
+  firebase_remote_config: ^5.4.2
+  firebase_analytics: ^11.4.4
     
 
 dev_dependencies:
