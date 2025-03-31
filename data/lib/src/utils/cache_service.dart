@@ -1,5 +1,5 @@
-import 'package:domain/domain.dart';
 import 'package:injectable/injectable.dart';
+import 'package:json_annotation/json_annotation.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sembast/sembast_io.dart';
@@ -30,8 +30,10 @@ class CacheService {
   void putInCache<T>(String key, T data) async {
     await _ensureInitialized();
 
-    if (data is ResultsModel) {
+    if (data is JsonSerializable) {
       _store!.record(key + keyExtension).put(_db!, data.toJson());
+    } else {
+      throw UnsupportedError('Unsupported data type: ${data.runtimeType}');
     }
   }
 

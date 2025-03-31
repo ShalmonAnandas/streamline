@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:streamline/core/service/app_service.dart';
-import 'package:streamline/src/features/home_screen/home_screen.dart';
+import 'package:streamline/src/features/home_screen/home_ui.dart';
 
 class MainApp extends StatelessWidget {
   const MainApp({super.key});
@@ -12,7 +12,7 @@ class MainApp extends StatelessWidget {
       navigatorKey: AppService.navigatorKey,
       title: "StreamLine",
       theme: ThemeData.dark(),
-      home: const Scaffold(body: HomeScreen()),
+      home: const Scaffold(body: HomeUI()),
     );
   }
 }

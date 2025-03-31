@@ -2,18 +2,18 @@ import 'package:amicons/amicons.dart';
 import 'package:flashy_tab_bar2/flashy_tab_bar2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:streamline/src/features/home_screen/home_screen_provider.dart';
+import 'package:streamline/src/features/home_screen/home_provider.dart';
 import 'package:streamline/src/features/home_screen/widgets/build_grid.dart';
 import 'package:streamline/src/features/search/search_ui.dart';
 
-class HomeScreen extends ConsumerStatefulWidget {
-  const HomeScreen({super.key});
+class HomeUI extends ConsumerStatefulWidget {
+  const HomeUI({super.key});
 
   @override
-  ConsumerState<HomeScreen> createState() => _HomeScreenState();
+  ConsumerState<HomeUI> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends ConsumerState<HomeScreen> {
+class _HomeScreenState extends ConsumerState<HomeUI> {
   int _currentIndex = 0;
   PageController pageController = PageController(initialPage: 0);
 

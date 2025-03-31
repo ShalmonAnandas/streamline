@@ -1,6 +1,6 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:domain/domain.dart';
 import 'package:flutter/material.dart';
+import 'package:streamline/src/features/home_screen/widgets/media_card.dart';
 
 class BuildGrid extends StatelessWidget {
   const BuildGrid({
@@ -36,40 +36,12 @@ class BuildGrid extends StatelessWidget {
         itemCount: (results?.length ?? 0) + 4,
         itemBuilder: (context, index) {
           if (index < (results?.length ?? 0)) {
-            final item = results![index];
-            return CachedNetworkImage(
-              fadeInDuration: const Duration(milliseconds: 50),
-              imageUrl:
-                  "http://image.tmdb.org/t/p/original/${item.posterPath ?? ""}",
-              errorWidget: (context, url, error) =>
-                  Center(child: Text(item.title ?? item.name ?? "")),
-              progressIndicatorBuilder: (context, url, progress) => Container(
-                margin: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: Colors.grey.withOpacity(0.3),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-              ),
-              imageBuilder: (context, imageProvider) => ClipRRect(
-                borderRadius: BorderRadius.circular(8),
-                child: Container(
-                  margin: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: Colors.grey.withOpacity(0.3),
-                    borderRadius: BorderRadius.circular(8),
-                    image: DecorationImage(
-                      image: imageProvider,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
-              ),
-            );
+            return MediaCard(item: results![index]);
           } else {
             return Container(
               margin: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: Colors.grey.withOpacity(0.3),
+                color: Colors.grey.withValues(alpha: 2),
                 borderRadius: BorderRadius.circular(8),
               ),
             );

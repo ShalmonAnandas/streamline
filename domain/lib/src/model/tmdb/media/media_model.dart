@@ -3,7 +3,7 @@ import 'package:equatable/equatable.dart';
 
 part 'media_model.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class MediaModel extends Equatable {
   MediaModel({
     required this.backdropPath,

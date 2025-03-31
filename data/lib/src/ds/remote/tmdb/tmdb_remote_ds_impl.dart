@@ -12,15 +12,6 @@ class TMDBRemoteDSImpl extends TMDBRemoteDs with ApiConstants {
   final APIClient _apiClient;
 
   @override
-  Future<Either<GenericError, ResultsModel>> getIMDBID(
-      GetIMDBIDParams params) async {
-    final response = await _apiClient.getRequest(
-        url: tmdbToImdbConversionURL(params), headers: tmdbHeaders);
-    return _apiClient.apiSafeGuard<ResultsModel>(
-        response, ResultsModel.fromJson);
-  }
-
-  @override
   Future<Either<GenericError, ResultsModel>> getTrending(
       GetTrendingParams params) async {
     final response = await _apiClient.getRequest(
@@ -49,5 +40,19 @@ class TMDBRemoteDSImpl extends TMDBRemoteDs with ApiConstants {
       model.results?.removeWhere((element) => element.mediaType == "person");
       return model;
     });
+  }
+
+  @override
+  Future<Either<GenericError, MediaDetailsModel>> getMediaDetails(
+      GetMediaDetailsParams params) async {
+    final response = await _apiClient.getRequest(
+        url: tmdbMediaDetailsUrl(
+          params.mediaType,
+          params.id,
+        ),
+        headers: tmdbHeaders);
+
+    return _apiClient.apiSafeGuard<MediaDetailsModel>(
+        response, MediaDetailsModel.fromJson);
   }
 }

@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'home_screen_provider.dart';
+part of 'home_provider.dart';
 
 // **************************************************************************
 // RiverpodGenerator
@@ -29,16 +29,76 @@ class _SystemHash {
   }
 }
 
-/// See also [fetchTrending].
+/// A Riverpod provider that fetches trending media (movies or TV shows) from the TMDB API.
+///
+/// This provider uses the `TMDBRepository` to fetch trending media based on the provided
+/// media type (`movie` or `tv`) and page number. It returns a list of `MediaModel` objects.
+///
+/// Parameters
+/// - [mediaType]: The type of media to fetch. Can be either "movie" or "tv".
+/// - [page]: The page number for pagination.
+///
+/// Throws:
+/// - An error if the API call fails.
+///
+/// Returns:
+/// - A `Future` that resolves to a list of `MediaModel` objects.
+///
+/// Copied from [fetchTrending].
 @ProviderFor(fetchTrending)
 const fetchTrendingProvider = FetchTrendingFamily();
 
-/// See also [fetchTrending].
+/// A Riverpod provider that fetches trending media (movies or TV shows) from the TMDB API.
+///
+/// This provider uses the `TMDBRepository` to fetch trending media based on the provided
+/// media type (`movie` or `tv`) and page number. It returns a list of `MediaModel` objects.
+///
+/// Parameters
+/// - [mediaType]: The type of media to fetch. Can be either "movie" or "tv".
+/// - [page]: The page number for pagination.
+///
+/// Throws:
+/// - An error if the API call fails.
+///
+/// Returns:
+/// - A `Future` that resolves to a list of `MediaModel` objects.
+///
+/// Copied from [fetchTrending].
 class FetchTrendingFamily extends Family<AsyncValue<List<MediaModel>>> {
-  /// See also [fetchTrending].
+  /// A Riverpod provider that fetches trending media (movies or TV shows) from the TMDB API.
+  ///
+  /// This provider uses the `TMDBRepository` to fetch trending media based on the provided
+  /// media type (`movie` or `tv`) and page number. It returns a list of `MediaModel` objects.
+  ///
+  /// Parameters
+  /// - [mediaType]: The type of media to fetch. Can be either "movie" or "tv".
+  /// - [page]: The page number for pagination.
+  ///
+  /// Throws:
+  /// - An error if the API call fails.
+  ///
+  /// Returns:
+  /// - A `Future` that resolves to a list of `MediaModel` objects.
+  ///
+  /// Copied from [fetchTrending].
   const FetchTrendingFamily();
 
-  /// See also [fetchTrending].
+  /// A Riverpod provider that fetches trending media (movies or TV shows) from the TMDB API.
+  ///
+  /// This provider uses the `TMDBRepository` to fetch trending media based on the provided
+  /// media type (`movie` or `tv`) and page number. It returns a list of `MediaModel` objects.
+  ///
+  /// Parameters
+  /// - [mediaType]: The type of media to fetch. Can be either "movie" or "tv".
+  /// - [page]: The page number for pagination.
+  ///
+  /// Throws:
+  /// - An error if the API call fails.
+  ///
+  /// Returns:
+  /// - A `Future` that resolves to a list of `MediaModel` objects.
+  ///
+  /// Copied from [fetchTrending].
   FetchTrendingProvider call({
     required String mediaType,
     required int page,
@@ -74,10 +134,40 @@ class FetchTrendingFamily extends Family<AsyncValue<List<MediaModel>>> {
   String? get name => r'fetchTrendingProvider';
 }
 
-/// See also [fetchTrending].
+/// A Riverpod provider that fetches trending media (movies or TV shows) from the TMDB API.
+///
+/// This provider uses the `TMDBRepository` to fetch trending media based on the provided
+/// media type (`movie` or `tv`) and page number. It returns a list of `MediaModel` objects.
+///
+/// Parameters
+/// - [mediaType]: The type of media to fetch. Can be either "movie" or "tv".
+/// - [page]: The page number for pagination.
+///
+/// Throws:
+/// - An error if the API call fails.
+///
+/// Returns:
+/// - A `Future` that resolves to a list of `MediaModel` objects.
+///
+/// Copied from [fetchTrending].
 class FetchTrendingProvider
     extends AutoDisposeFutureProvider<List<MediaModel>> {
-  /// See also [fetchTrending].
+  /// A Riverpod provider that fetches trending media (movies or TV shows) from the TMDB API.
+  ///
+  /// This provider uses the `TMDBRepository` to fetch trending media based on the provided
+  /// media type (`movie` or `tv`) and page number. It returns a list of `MediaModel` objects.
+  ///
+  /// Parameters
+  /// - [mediaType]: The type of media to fetch. Can be either "movie" or "tv".
+  /// - [page]: The page number for pagination.
+  ///
+  /// Throws:
+  /// - An error if the API call fails.
+  ///
+  /// Returns:
+  /// - A `Future` that resolves to a list of `MediaModel` objects.
+  ///
+  /// Copied from [fetchTrending].
   FetchTrendingProvider({
     required String mediaType,
     required int page,

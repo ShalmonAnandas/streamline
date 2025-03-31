@@ -26,4 +26,23 @@ class TMDBLocalDsImpl extends TMDBLocalDs {
     _cacheService.putInCache<T>(
         "trending_${params.mediaType}_${params.page}", data);
   }
+
+  @override
+  Future<MediaDetailsModel?> getMediaDetails(
+      GetMediaDetailsParams params) async {
+    final cachedData = await _cacheService
+        .getFromCache<Map>("media_details_${params.mediaType}_${params.id}");
+
+    if (cachedData != null) {
+      return MediaDetailsModel.fromJson(Map<String, dynamic>.from(cachedData));
+    } else {
+      return null;
+    }
+  }
+
+  @override
+  void cacheMediaDetails<T>(T data, GetMediaDetailsParams params) {
+    _cacheService.putInCache<T>(
+        "media_details_${params.mediaType}_${params.id}", data);
+  }
 }

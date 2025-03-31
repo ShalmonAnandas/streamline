@@ -29,16 +29,36 @@ class _SystemHash {
   }
 }
 
-/// See also [search].
+/// This file defines a Riverpod provider for performing a search operation on TMDB.
+///
+/// The `search` provider is an asynchronous function that interacts with the `TMDBRepository`
+/// to fetch a list of media (e.g., movies or TV shows) based on a search query.
+///
+/// Copied from [search].
 @ProviderFor(search)
 const searchProvider = SearchFamily();
 
-/// See also [search].
+/// This file defines a Riverpod provider for performing a search operation on TMDB.
+///
+/// The `search` provider is an asynchronous function that interacts with the `TMDBRepository`
+/// to fetch a list of media (e.g., movies or TV shows) based on a search query.
+///
+/// Copied from [search].
 class SearchFamily extends Family<AsyncValue<List<MediaModel>?>> {
-  /// See also [search].
+  /// This file defines a Riverpod provider for performing a search operation on TMDB.
+  ///
+  /// The `search` provider is an asynchronous function that interacts with the `TMDBRepository`
+  /// to fetch a list of media (e.g., movies or TV shows) based on a search query.
+  ///
+  /// Copied from [search].
   const SearchFamily();
 
-  /// See also [search].
+  /// This file defines a Riverpod provider for performing a search operation on TMDB.
+  ///
+  /// The `search` provider is an asynchronous function that interacts with the `TMDBRepository`
+  /// to fetch a list of media (e.g., movies or TV shows) based on a search query.
+  ///
+  /// Copied from [search].
   SearchProvider call({
     required String query,
   }) {
@@ -71,9 +91,19 @@ class SearchFamily extends Family<AsyncValue<List<MediaModel>?>> {
   String? get name => r'searchProvider';
 }
 
-/// See also [search].
+/// This file defines a Riverpod provider for performing a search operation on TMDB.
+///
+/// The `search` provider is an asynchronous function that interacts with the `TMDBRepository`
+/// to fetch a list of media (e.g., movies or TV shows) based on a search query.
+///
+/// Copied from [search].
 class SearchProvider extends AutoDisposeFutureProvider<List<MediaModel>?> {
-  /// See also [search].
+  /// This file defines a Riverpod provider for performing a search operation on TMDB.
+  ///
+  /// The `search` provider is an asynchronous function that interacts with the `TMDBRepository`
+  /// to fetch a list of media (e.g., movies or TV shows) based on a search query.
+  ///
+  /// Copied from [search].
   SearchProvider({
     required String query,
   }) : this._internal(

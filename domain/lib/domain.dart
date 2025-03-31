@@ -8,8 +8,9 @@ export 'src/repository/tmdb_repository.dart';
 export 'src/model/error/network_error.dart';
 export 'src/model/tmdb/media/media_model.dart';
 export 'src/model/tmdb/results/results_model.dart';
-export 'src/usecase/tmdb/get_imdb_id.dart';
 export 'src/usecase/tmdb/get_trending.dart';
+export 'src/usecase/tmdb/get_media_details.dart';
+export 'src/model/tmdb/media/media_details_model.dart';
 
 export 'src/usecase/base/params.dart';
 

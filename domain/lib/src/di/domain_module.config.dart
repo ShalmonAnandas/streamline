@@ -11,8 +11,9 @@
 import 'package:get_it/get_it.dart' as _i174;
 import 'package:injectable/injectable.dart' as _i526;
 
+import '../../domain.dart' as _i789;
 import '../repository/tmdb_repository.dart' as _i681;
-import '../usecase/tmdb/get_imdb_id.dart' as _i795;
+import '../usecase/tmdb/get_media_details.dart' as _i591;
 import '../usecase/tmdb/get_trending.dart' as _i675;
 import '../usecase/tmdb/search_tmdb.dart' as _i493;
 
@@ -27,12 +28,12 @@ extension GetItInjectableX on _i174.GetIt {
       environment,
       environmentFilter,
     );
-    gh.factory<_i795.GetIMDBID>(
-        () => _i795.GetIMDBID(gh<_i681.TMDBRepository>()));
-    gh.factory<_i493.SearchTmdb>(
-        () => _i493.SearchTmdb(gh<_i681.TMDBRepository>()));
+    gh.factory<_i591.GetMediaDetails>(
+        () => _i591.GetMediaDetails(gh<_i789.TMDBRepository>()));
     gh.factory<_i675.GetTrending>(
         () => _i675.GetTrending(gh<_i681.TMDBRepository>()));
+    gh.factory<_i493.SearchTmdb>(
+        () => _i493.SearchTmdb(gh<_i681.TMDBRepository>()));
     return this;
   }
 }

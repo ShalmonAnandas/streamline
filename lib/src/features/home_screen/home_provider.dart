@@ -3,14 +3,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:streamline/core/di/di.dart';
 
-part 'home_screen_provider.g.dart';
+part 'home_provider.g.dart';
 
 /// A Riverpod provider that fetches trending media (movies or TV shows) from the TMDB API.
 ///
 /// This provider uses the `TMDBRepository` to fetch trending media based on the provided
 /// media type (`movie` or `tv`) and page number. It returns a list of `MediaModel` objects.
 ///
-/// Parameters:
+/// Parameters
 /// - [mediaType]: The type of media to fetch. Can be either "movie" or "tv".
 /// - [page]: The page number for pagination.
 ///
