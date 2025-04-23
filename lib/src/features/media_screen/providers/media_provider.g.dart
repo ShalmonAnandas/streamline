@@ -6,7 +6,7 @@ part of 'media_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$mediaDetailsHash() => r'a8a157ca41ace3de0dcf358ccefbbc98f3c47d7a';
+String _$mediaDetailsHash() => r'71cd333d7db58b708a22985b69c28e8c2e703eb4';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -157,6 +157,149 @@ class _MediaDetailsProviderElement
 
   @override
   GetMediaDetailsParams get params => (origin as MediaDetailsProvider).params;
+}
+
+String _$mediaSaveHash() => r'1749d3ceb15dbe0183b3b07a0b9e54a702528148';
+
+abstract class _$MediaSave extends BuildlessAutoDisposeAsyncNotifier<bool> {
+  late final MediaDetailsModel media;
+
+  FutureOr<bool> build(
+    MediaDetailsModel media,
+  );
+}
+
+/// See also [MediaSave].
+@ProviderFor(MediaSave)
+const mediaSaveProvider = MediaSaveFamily();
+
+/// See also [MediaSave].
+class MediaSaveFamily extends Family<AsyncValue<bool>> {
+  /// See also [MediaSave].
+  const MediaSaveFamily();
+
+  /// See also [MediaSave].
+  MediaSaveProvider call(
+    MediaDetailsModel media,
+  ) {
+    return MediaSaveProvider(
+      media,
+    );
+  }
+
+  @override
+  MediaSaveProvider getProviderOverride(
+    covariant MediaSaveProvider provider,
+  ) {
+    return call(
+      provider.media,
+    );
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'mediaSaveProvider';
+}
+
+/// See also [MediaSave].
+class MediaSaveProvider
+    extends AutoDisposeAsyncNotifierProviderImpl<MediaSave, bool> {
+  /// See also [MediaSave].
+  MediaSaveProvider(
+    MediaDetailsModel media,
+  ) : this._internal(
+          () => MediaSave()..media = media,
+          from: mediaSaveProvider,
+          name: r'mediaSaveProvider',
+          debugGetCreateSourceHash:
+              const bool.fromEnvironment('dart.vm.product')
+                  ? null
+                  : _$mediaSaveHash,
+          dependencies: MediaSaveFamily._dependencies,
+          allTransitiveDependencies: MediaSaveFamily._allTransitiveDependencies,
+          media: media,
+        );
+
+  MediaSaveProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.media,
+  }) : super.internal();
+
+  final MediaDetailsModel media;
+
+  @override
+  FutureOr<bool> runNotifierBuild(
+    covariant MediaSave notifier,
+  ) {
+    return notifier.build(
+      media,
+    );
+  }
+
+  @override
+  Override overrideWith(MediaSave Function() create) {
+    return ProviderOverride(
+      origin: this,
+      override: MediaSaveProvider._internal(
+        () => create()..media = media,
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        media: media,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeAsyncNotifierProviderElement<MediaSave, bool> createElement() {
+    return _MediaSaveProviderElement(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is MediaSaveProvider && other.media == media;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, media.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+mixin MediaSaveRef on AutoDisposeAsyncNotifierProviderRef<bool> {
+  /// The parameter `media` of this provider.
+  MediaDetailsModel get media;
+}
+
+class _MediaSaveProviderElement
+    extends AutoDisposeAsyncNotifierProviderElement<MediaSave, bool>
+    with MediaSaveRef {
+  _MediaSaveProviderElement(super.provider);
+
+  @override
+  MediaDetailsModel get media => (origin as MediaSaveProvider).media;
 }
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

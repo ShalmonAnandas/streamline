@@ -35,10 +35,20 @@ Future<List<MediaModel>> fetchTrending(
   );
 }
 
-/// A `StateProvider` that keeps track of the current page number for pagination.
+/// A `StateProvider` that keeps track of the current page number for movie pagination.
 ///
 /// Default value: `1`.
-final currentPageProvider = StateProvider<int>((ref) => 1);
+final movieCurrentPageProvider = StateProvider<int>((ref) => 1);
+
+/// A `StateProvider` that keeps track of the current page number for show pagination.
+///
+/// Default value: `1`.
+final showCurrentPageProvider = StateProvider<int>((ref) => 1);
+
+/// A `StateProvider` that keeps track of the current page number for carousel pagination.
+///
+/// Default value: `1`.
+final carouselCurrentPageProvider = StateProvider<int>((ref) => 1);
 
 /// A `StateProvider` that holds the list of trending movies.
 ///
@@ -50,9 +60,14 @@ final trendingMoviesProvider = StateProvider<List<MediaModel>>((ref) => []);
 /// Default value: An empty list of `MediaModel`.
 final trendingShowsProvider = StateProvider<List<MediaModel>>((ref) => []);
 
+/// A `StateProvider` that holds the list of media for the carousel (all types).
+///
+/// Default value: An empty list of `MediaModel`.
+final carouselMediaProvider = StateProvider<List<MediaModel>>((ref) => []);
+
 /// Fetches the next page of trending movies and updates the `trendingMoviesProvider`.
 ///
-/// This function reads the current page number from `currentPageProvider`, fetches
+/// This function reads the current page number from `movieCurrentPageProvider`, fetches
 /// the trending movies for that page using the `fetchTrending` provider, and appends
 /// the new movies to the existing list in `trendingMoviesProvider`. It then increments
 /// the current page number.
@@ -63,7 +78,8 @@ final trendingShowsProvider = StateProvider<List<MediaModel>>((ref) => []);
 /// Throws:
 /// - An error if the API call fails.
 Future<void> fetchAndUpdateMovies(WidgetRef ref) async {
-  final currentPage = ref.read(currentPageProvider.notifier).state;
+  // Use movieCurrentPageProvider
+  final currentPage = ref.read(movieCurrentPageProvider.notifier).state;
   final newMovies = await ref.read(fetchTrendingProvider(
     mediaType: "movie",
     page: currentPage,
@@ -72,12 +88,13 @@ Future<void> fetchAndUpdateMovies(WidgetRef ref) async {
   ref
       .read(trendingMoviesProvider.notifier)
       .update((state) => [...state, ...newMovies]);
-  ref.read(currentPageProvider.notifier).state++;
+  // Increment movieCurrentPageProvider
+  ref.read(movieCurrentPageProvider.notifier).state++;
 }
 
 /// Fetches the next page of trending TV shows and updates the `trendingShowsProvider`.
 ///
-/// This function reads the current page number from `currentPageProvider`, fetches
+/// This function reads the current page number from `showCurrentPageProvider`, fetches
 /// the trending TV shows for that page using the `fetchTrending` provider, and appends
 /// the new shows to the existing list in `trendingShowsProvider`. It then increments
 /// the current page number.
@@ -88,7 +105,8 @@ Future<void> fetchAndUpdateMovies(WidgetRef ref) async {
 /// Throws:
 /// - An error if the API call fails.
 Future<void> fetchAndUpdateShows(WidgetRef ref) async {
-  final currentPage = ref.read(currentPageProvider.notifier).state;
+  // Use showCurrentPageProvider
+  final currentPage = ref.read(showCurrentPageProvider.notifier).state;
   final newShows = await ref.read(fetchTrendingProvider(
     mediaType: "tv",
     page: currentPage,
@@ -97,5 +115,35 @@ Future<void> fetchAndUpdateShows(WidgetRef ref) async {
   ref
       .read(trendingShowsProvider.notifier)
       .update((state) => [...state, ...newShows]);
-  ref.read(currentPageProvider.notifier).state++;
+  // Increment showCurrentPageProvider
+  ref.read(showCurrentPageProvider.notifier).state++;
+}
+
+/// Fetches the next page of trending media (all types) and updates the `carouselMediaProvider`.
+///
+/// This function reads the current page number from `carouselCurrentPageProvider`, fetches
+/// the trending media for that page using the `fetchTrending` provider with `mediaType: 'all'`,
+/// and appends the new media to the existing list in `carouselMediaProvider`. It then increments
+/// the current page number.
+///
+/// Parameters:
+/// - [ref]: A `WidgetRef` used to read and update providers.
+///
+/// Throws:
+/// - An error if the API call fails.
+Future<void> fetchAndUpdateCarouselMedia(WidgetRef ref) async {
+  // Use carouselCurrentPageProvider
+  final currentPage = ref.read(carouselCurrentPageProvider.notifier).state;
+  // Fetch media with type 'all'
+  final newMedia = await ref.read(fetchTrendingProvider(
+    mediaType: "all", // Fetch all types
+    page: currentPage,
+  ).future);
+
+  ref
+      .read(carouselMediaProvider.notifier)
+      .update((state) => [...state, ...newMedia]);
+
+  // Increment carouselCurrentPageProvider
+  ref.read(carouselCurrentPageProvider.notifier).state++;
 }

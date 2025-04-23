@@ -26,4 +26,9 @@ mixin ApiConstants {
   String tmdbMediaDetailsUrl(String mediaType, int id) {
     return "$tmdbBaseUrl/3/$mediaType/$id?append_to_response=external_ids&language=en-US";
   }
+
+  String tmdbRecommendationsUrl(
+      int movieId, String language, int page, String mediaType) {
+    return "$tmdbBaseUrl/3/$mediaType/$movieId/recommendations?language=$language&page=$page";
+  }
 }

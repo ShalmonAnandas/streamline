@@ -55,4 +55,17 @@ class TMDBRemoteDSImpl extends TMDBRemoteDs with ApiConstants {
     return _apiClient.apiSafeGuard<MediaDetailsModel>(
         response, MediaDetailsModel.fromJson);
   }
+
+  // Add this implementation
+  @override
+  Future<Either<GenericError, ResultsModel>> getRecommendations(
+      GetRecommendationsParams params) async {
+    final response = await _apiClient.getRequest(
+        url: tmdbRecommendationsUrl(
+            params.movieId, params.language, params.page, params.mediaType),
+        headers: tmdbHeaders);
+
+    return _apiClient.apiSafeGuard<ResultsModel>(
+        response, ResultsModel.fromJson);
+  }
 }

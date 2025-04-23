@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:domain/domain.dart';
+import 'package:domain/src/usecase/tmdb/get_recommendations_usecase.dart';
 
 abstract class TMDBRepository {
   Future<Either<GenericError, List<MediaModel>?>> getTrending(
@@ -8,4 +9,18 @@ abstract class TMDBRepository {
       String searchQuery);
   Future<Either<GenericError, MediaDetailsModel>> getMediaDetails(
       GetMediaDetailsParams params);
+  Future<Either<GenericError, List<MediaModel>?>> getRecommendations(
+      GetRecommendationsParams params);
+
+  // Add this method signature
+  void saveMedia(MediaDetailsModel media);
+
+  // Add method signature to retrieve the list of saved media
+  Future<List<MediaDetailsModel>> getSavedMedia();
+
+  // Add method signature to check if media is saved
+  Future<bool> isMediaSaved(int mediaId);
+
+  // Add method signature to remove saved media
+  Future<void> removeSavedMedia(int mediaId);
 }

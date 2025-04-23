@@ -14,6 +14,7 @@ import 'package:injectable/injectable.dart' as _i526;
 import '../../domain.dart' as _i789;
 import '../repository/tmdb_repository.dart' as _i681;
 import '../usecase/tmdb/get_media_details.dart' as _i591;
+import '../usecase/tmdb/get_recommendations_usecase.dart' as _i666;
 import '../usecase/tmdb/get_trending.dart' as _i675;
 import '../usecase/tmdb/search_tmdb.dart' as _i493;
 
@@ -34,6 +35,8 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i675.GetTrending(gh<_i681.TMDBRepository>()));
     gh.factory<_i493.SearchTmdb>(
         () => _i493.SearchTmdb(gh<_i681.TMDBRepository>()));
+    gh.factory<_i666.GetRecommendationsUseCase>(
+        () => _i666.GetRecommendationsUseCase(gh<_i789.TMDBRepository>()));
     return this;
   }
 }

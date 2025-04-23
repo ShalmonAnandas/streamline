@@ -7,4 +7,8 @@ abstract class TMDBRemoteDs {
   Future<Either<GenericError, ResultsModel>> searchTMDB(String searchQuery);
   Future<Either<GenericError, MediaDetailsModel>> getMediaDetails(
       GetMediaDetailsParams params);
+
+  // Add this method
+  Future<Either<GenericError, ResultsModel>> getRecommendations(
+      GetRecommendationsParams params);
 }

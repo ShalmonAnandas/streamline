@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:streamline/core/service/app_service.dart';
 import 'package:streamline/src/features/home_screen/home_ui.dart';
 
 class MainApp extends StatelessWidget {
@@ -8,8 +7,8 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      key: AppService.appKey,
-      navigatorKey: AppService.navigatorKey,
+      // key: AppService.appKey,
+      // navigatorKey: AppService.navigatorKey,
       title: "StreamLine",
       theme: ThemeData.dark(),
       home: const Scaffold(body: HomeUI()),
