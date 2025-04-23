@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:streamline/src/features/home_screen/home_provider.dart';
-import 'package:streamline/src/features/media_screen/media_ui.dart';
+import 'package:streamline/src/features/media/media_ui.dart';
 import 'package:streamline/src/widgets/instant_network_image.dart'; // Import InstantNetworkImage
 
 const String imageBaseUrl = 'https://image.tmdb.org/t/p/original';

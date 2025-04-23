@@ -1,6 +1,5 @@
 import 'package:dartz/dartz.dart';
 import 'package:domain/domain.dart';
-import 'package:domain/src/usecase/tmdb/get_recommendations_usecase.dart';
 
 abstract class TMDBRepository {
   Future<Either<GenericError, List<MediaModel>?>> getTrending(

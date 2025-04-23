@@ -9,10 +9,10 @@ import 'package:streamline/src/features/search/search_ui.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:streamline/src/widgets/parallax_carousel.dart'; // Import the new widget
 import 'package:streamline/src/widgets/sliding_bottom_nav_bar.dart'; // Import the custom widget
-import 'package:streamline/src/features/media_screen/media_ui.dart'; // Import MediaUI
+import 'package:streamline/src/features/media/media_ui.dart'; // Import MediaUI
 import 'package:domain/domain.dart'; // Import MediaModel
-import 'package:streamline/src/features/library_screen/library_ui.dart'; // Import LibraryScreen
-import 'package:streamline/src/features/profile_screen/profile_ui.dart'; // Import ProfileScreen
+import 'package:streamline/src/features/library/library_ui.dart'; // Import LibraryScreen
+import 'package:streamline/src/features/profile/profile_ui.dart'; // Import ProfileScreen
 import 'package:streamline/src/features/home_screen/trending_ui.dart'; // Import TrendingUI
 
 class HomeUI extends ConsumerStatefulWidget {

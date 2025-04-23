@@ -8,12 +8,7 @@ abstract class TMDBLocalDs {
   Future<ResultsModel?> getRecommendations(GetRecommendationsParams params);
   void cacheRecommendations<T>(T data, GetRecommendationsParams params);
   void saveMedia(MediaDetailsModel media);
-  // Add method to retrieve the list of saved media
   Future<List<MediaDetailsModel>> getSavedMedia();
-
-  // Add method to check if media is saved
   Future<bool> isMediaSaved(int mediaId);
-
-  // Add method signature to remove saved media
   Future<void> removeSavedMedia(int mediaId);
 }

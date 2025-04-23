@@ -2,7 +2,7 @@ import 'package:domain/domain.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:streamline/core/base_widget/riverpod_stateless_widget.dart';
-import 'package:streamline/src/features/media_screen/providers/media_provider.dart';
+import 'package:streamline/src/features/media/providers/media_provider.dart';
 
 // Import new widgets
 import 'widgets/media_app_bar.dart';

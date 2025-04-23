@@ -2,7 +2,6 @@ import 'package:dartz/dartz.dart';
 import 'package:data/src/ds/local/tmdb/tmdb_local_ds.dart';
 import 'package:data/src/ds/remote/tmdb/tmdb_remote_ds.dart';
 import 'package:domain/domain.dart';
-import 'package:domain/src/usecase/tmdb/get_recommendations_usecase.dart';
 import 'package:injectable/injectable.dart';
 
 @Injectable(as: TMDBRepository)

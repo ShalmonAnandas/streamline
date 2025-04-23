@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:streamline/src/features/media_screen/media_ui.dart'; // Import MediaUI
+import 'package:streamline/src/features/media/media_ui.dart'; // Import MediaUI
 import 'library_providers.dart'; // Import the new provider
 
 // 1. Convert back to ConsumerWidget
 class LibraryScreen extends ConsumerWidget {
-  const LibraryScreen({Key? key}) : super(key: key);
+  const LibraryScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -21,7 +20,7 @@ class LibraryScreen extends ConsumerWidget {
           }
           return GridView.builder(
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
+              crossAxisCount: 3,
               childAspectRatio: 3 / 4, // Kept the shorter aspect ratio
               crossAxisSpacing: 8,
               mainAxisSpacing: 8,
