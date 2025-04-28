@@ -27,6 +27,7 @@ class _SearchUiState extends ConsumerState<SearchUi> {
 
   @override
   Widget build(BuildContext context) {
+    final orientation = MediaQuery.of(context).orientation;
     final searchResults =
         ref.watch(searchProvider(query: _query)); // Watch the provider directly
 
@@ -138,10 +139,11 @@ class _SearchUiState extends ConsumerState<SearchUi> {
                     );
                   }
 
+                  final int crossAxisCount =
+                      orientation == Orientation.landscape ? 7 : 3;
                   return GridView.builder(
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: crossAxisCount,
                       crossAxisSpacing: 12.0, // Increased spacing
                       mainAxisSpacing: 12.0, // Increased spacing
                       childAspectRatio: 2 / 3,

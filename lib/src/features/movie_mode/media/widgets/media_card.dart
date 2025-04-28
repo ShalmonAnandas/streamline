@@ -11,13 +11,17 @@ class MediaCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final orientation = MediaQuery.of(context).orientation;
     final imageUrl = media.posterPath != null
         ? '$tmdbImageBaseUrl${media.posterPath}'
         : null; // Handle null poster path
 
     return SizedBox(
-      width: 140, // Increased width
-      height: 220, // Added height to ensure consistency
+      width:
+          orientation == Orientation.landscape ? 250 : 140, // Increased width
+      height: orientation == Orientation.landscape
+          ? 350
+          : 220, // Added height to ensure consistency
       child: GestureDetector(
         // Added GestureDetector for tap handling
         onTap: () {

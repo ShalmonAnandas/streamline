@@ -9,6 +9,7 @@ class LibraryScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final orientation = MediaQuery.of(context).orientation;
     // Add WidgetRef
     final savedMediaAsyncValue = ref.watch(savedMediaProvider);
 
@@ -18,9 +19,11 @@ class LibraryScreen extends ConsumerWidget {
           if (mediaList.isEmpty) {
             return const Center(child: Text('No saved media yet.'));
           }
+          final int crossAxisCount =
+              orientation == Orientation.landscape ? 7 : 3;
           return GridView.builder(
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 3,
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: crossAxisCount,
               childAspectRatio: 3 / 4, // Kept the shorter aspect ratio
               crossAxisSpacing: 8,
               mainAxisSpacing: 8,

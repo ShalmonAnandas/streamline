@@ -102,6 +102,7 @@ class _TrendingUIState extends ConsumerState<TrendingUI> {
   @override
   Widget build(BuildContext context) {
     final mediaList = ref.watch(_getProvider());
+    final orientation = MediaQuery.of(context).orientation; // Get orientation
 
     // Determine the title based on mediaType
     final String title =
@@ -143,10 +144,14 @@ class _TrendingUIState extends ConsumerState<TrendingUI> {
           );
         }
 
+        // Determine crossAxisCount based on orientation
+        final int crossAxisCount =
+            orientation == Orientation.landscape ? 7 : 2;
+
         return GridView.builder(
           controller: _scrollController,
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2, // Adjust number of columns as needed
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: crossAxisCount, // Use dynamic crossAxisCount
             childAspectRatio: 0.7, // Adjust aspect ratio for posters
             crossAxisSpacing: 8.0,
             mainAxisSpacing: 8.0,

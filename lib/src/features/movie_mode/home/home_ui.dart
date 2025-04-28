@@ -140,122 +140,213 @@ class _HomeScreenState extends ConsumerState<HomeUI> {
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
-      body: PageView(
-        // Replace SingleChildScrollView with PageView
-        controller: _pageController,
-        onPageChanged: (index) {
-          setState(() {
-            _currentIndex = index; // Update index on swipe
-          });
-        },
-        children: <Widget>[
-          _buildHomeScreenContent(
-              context,
-              ref,
-              movies,
-              shows,
-              carouselMedia, // Pass carouselMedia
-              imageUrls,
-              titles,
-              descriptions),
-          const LibraryScreen(), // Page 1: Library (Placeholder)
-          SearchUi(), // Page 2: Search
-          const ProfileScreen(), // Page 3: Profile (Placeholder)
-        ],
-      ),
-      bottomNavigationBar: SizedBox(
-        height: 65,
-        child: SlidingBottomNavBar(
-          currentIndex: _currentIndex,
-          onTap: (index) {
-            // Animate to the selected page when bottom nav item is tapped
-            _pageController.animateToPage(
-              index,
-              duration: const Duration(milliseconds: 400),
-              curve: Curves.easeOutCubic,
+      body: LayoutBuilder(
+        // Use LayoutBuilder to get constraints
+        builder: (context, constraints) {
+          final isLandscape = constraints.maxWidth > constraints.maxHeight;
+
+          // Build the main page content
+          final pageView = PageView(
+            controller: _pageController,
+            scrollDirection: isLandscape
+                ? Axis.vertical
+                : Axis.horizontal, // Set scroll direction based on orientation
+            onPageChanged: (index) {
+              setState(() {
+                _currentIndex = index; // Update index on swipe
+              });
+            },
+            children: <Widget>[
+              _buildHomeScreenContent(
+                context,
+                ref,
+                movies,
+                shows,
+                carouselMedia,
+                imageUrls,
+                titles,
+                descriptions,
+                isLandscape, // Pass orientation info
+              ),
+              const LibraryScreen(), // Page 1: Library
+              SearchUi(), // Page 2: Search
+              const ProfileScreen(), // Page 3: Profile
+            ],
+          );
+
+          if (isLandscape) {
+            // Landscape layout: NavigationRail + PageView
+            return Row(
+              children: [
+                NavigationRail(
+                  // Adjust groupAlignment to space items vertically
+                  groupAlignment: 0.0, // Center alignment might spread items
+                  
+                  selectedIndex: _currentIndex,
+                  onDestinationSelected: (index) {
+                    _pageController.animateToPage(
+                      index,
+                      duration: const Duration(milliseconds: 400),
+                      curve: Curves.easeOutCubic,
+                    );
+                    // setState is handled by onPageChanged
+                  },
+                  labelType: NavigationRailLabelType
+                      .selected, // Show labels when selected
+                  backgroundColor: Theme.of(context)
+                      .scaffoldBackgroundColor
+                      .withOpacity(0.5), // Optional styling
+                  indicatorColor: _navBarItems[_currentIndex]
+                      .activeColor
+                      .withOpacity(0.3), // Indicator color
+
+                  destinations: _navBarItems.map((item) {
+                    return NavigationRailDestination(
+                      icon: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        child: Icon(item.icon),
+                      ),
+                      selectedIcon:
+                          Icon(item.activeIcon, color: item.activeColor),
+                      indicatorShape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(8))),
+                      label: Text(_getLabelForIndex(
+                          _navBarItems.indexOf(item))), // Add labels
+                    );
+                  }).toList(),
+                ),
+                Expanded(child: pageView), // Main content takes remaining space
+              ],
             );
-            // No need to call setState here as onPageChanged will handle it
-          },
-          items: _navBarItems,
-          curve: Curves.easeOutCubic,
-        ),
+          } else {
+            // Portrait layout: PageView + BottomNavBar
+            return pageView; // PageView takes the full body
+          }
+        },
+      ),
+      // Conditionally show BottomNavBar only in portrait
+      bottomNavigationBar: LayoutBuilder(
+        // Use LayoutBuilder again for safety
+        builder: (context, constraints) {
+          final isLandscape = constraints.maxWidth > constraints.maxHeight;
+          if (isLandscape) {
+            return const SizedBox.shrink(); // Hide in landscape
+          } else {
+            return SizedBox(
+              height: 65,
+              child: SlidingBottomNavBar(
+                currentIndex: _currentIndex,
+                onTap: (index) {
+                  _pageController.animateToPage(
+                    index,
+                    duration: const Duration(milliseconds: 400),
+                    curve: Curves.easeOutCubic,
+                  );
+                },
+                items: _navBarItems,
+                curve: Curves.easeOutCubic,
+              ),
+            );
+          }
+        },
       ),
     );
   }
 
-  // Extracted the home screen content into a separate method
+  // Helper to get labels for NavigationRail
+  String _getLabelForIndex(int index) {
+    switch (index) {
+      case 0:
+        return 'Home';
+      case 1:
+        return 'Library';
+      case 2:
+        return 'Search';
+      case 3:
+        return 'Profile';
+      default:
+        return '';
+    }
+  }
+
+  // Update _buildHomeScreenContent to accept orientation
   Widget _buildHomeScreenContent(
       BuildContext context,
       WidgetRef ref,
       List<MediaModel> movies,
       List<MediaModel> shows,
-      List<MediaModel> carouselMedia, // Add carouselMedia parameter
+      List<MediaModel> carouselMedia,
       List<String> imageUrls,
       List<String> titles,
-      List<String> descriptions) {
-    // Add descriptions parameter
-    // final movies = ref.watch(trendingMoviesProvider); // Already watched in build method
-    // final shows = ref.watch(trendingShowsProvider); // Already watched in build method
+      List<String> descriptions,
+      bool isLandscape) {
+    // Add isLandscape parameter
 
     return SingleChildScrollView(
-      // Keep SingleChildScrollView for the home content itself
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Pass data from carouselMediaProvider to the ParallaxCarousel
-          if (imageUrls.isNotEmpty)
-            ParallaxCarousel(
-              imageURLs: imageUrls,
-              titles: titles, // Pass the extracted titles
-              descriptions: descriptions, // Pass the extracted descriptions
-              onTap: (index) {
-                // Add onTap handler
-                final media = carouselMedia[index]; // Use carouselMedia
-                // Use mediaType from the specific media item
-                final mediaType =
-                    media.mediaType ?? 'movie'; // Default to movie if null
-                if (media.id != null) {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => MediaUI(
-                        mediaType, // Pass the correct media type
-                        media.id!,
-                      ), // Pass ID and type
-                    ),
-                  );
-                } else {
-                  log("Media ID is null, cannot navigate.");
-                  // Optionally show a snackbar or message to the user
-                }
-              },
-            )
-          else
-            SizedBox(
-              height: MediaQuery.of(context).size.height * 0.6,
-              child: Center(child: CircularProgressIndicator()),
-            ),
+          // Conditionally show ParallaxCarousel only in portrait
+          if (!isLandscape)
+            if (imageUrls.isNotEmpty)
+              ParallaxCarousel(
+                imageURLs: imageUrls,
+                titles: titles,
+                descriptions: descriptions,
+                onTap: (index) {
+                  // Add onTap handler
+                  final media = carouselMedia[index]; // Use carouselMedia
+                  // Use mediaType from the specific media item
+                  final mediaType =
+                      media.mediaType ?? 'movie'; // Default to movie if null
+                  if (media.id != null) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => MediaUI(
+                          mediaType, // Pass the correct media type
+                          media.id!,
+                        ), // Pass ID and type
+                      ),
+                    );
+                  } else {
+                    log("Media ID is null, cannot navigate.");
+                    // Optionally show a snackbar or message to the user
+                  }
+                },
+              )
+            else
+              SizedBox(
+                height: MediaQuery.of(context).size.height * 0.6,
+                child: Center(child: CircularProgressIndicator()),
+              ),
 
-          SizedBox(height: 24),
+          // Add top padding if carousel is hidden in landscape
+          if (isLandscape) const SizedBox(height: 24),
+
+          // Keep existing SizedBox if carousel is shown (portrait)
+          if (!isLandscape) const SizedBox(height: 24),
 
           // Trending Movies Section
           _buildMediaSection(
-            context: context, // Pass context as named argument
+            context: context,
             title: 'Trending Movies',
             mediaList: movies,
             scrollController: _movieScrollController,
-            mediaType: 'movie', // Specify media type
+            mediaType: 'movie',
+            isLandscape: isLandscape, // Pass orientation
           ),
 
           SizedBox(height: 24),
 
           // Trending TV Shows Section
           _buildMediaSection(
-            context: context, // Pass context as named argument
+            context: context,
             title: 'Trending TV Shows',
-            mediaList: shows, // Use the passed shows list
+            mediaList: shows,
             scrollController: _showScrollController,
-            mediaType: 'tv', // Specify media type
+            mediaType: 'tv',
+            isLandscape: isLandscape, // Pass orientation
           ),
 
           SizedBox(height: 20), // Add some bottom padding
@@ -264,14 +355,19 @@ class _HomeScreenState extends ConsumerState<HomeUI> {
     );
   }
 
-  // Helper widget to build a media section (Movies or Shows)
+  // Update _buildMediaSection to accept orientation
   Widget _buildMediaSection({
     required BuildContext context,
     required String title,
     required List<MediaModel> mediaList,
     required ScrollController scrollController,
-    required String mediaType, // Added mediaType parameter
+    required String mediaType,
+    required bool isLandscape, // Add isLandscape parameter
   }) {
+    // Adjust height based on orientation
+    final double sectionHeight = isLandscape ? 400 : 250;
+    final double itemWidth = isLandscape ? 250 : 150;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -310,11 +406,9 @@ class _HomeScreenState extends ConsumerState<HomeUI> {
         ),
         SizedBox(height: 12),
         SizedBox(
-          height: 250, // Adjust height as needed
+          height: sectionHeight, // Use adjusted height
           child: mediaList.isEmpty
-              ? Center(
-                  child:
-                      CircularProgressIndicator()) // Show loader if empty initially
+              ? Center(child: CircularProgressIndicator())
               : ListView.builder(
                   controller: scrollController,
                   scrollDirection: Axis.horizontal,
@@ -343,7 +437,7 @@ class _HomeScreenState extends ConsumerState<HomeUI> {
                         }
                       },
                       child: Container(
-                        width: 150, // Adjust width as needed
+                        width: itemWidth, // Use adjusted width
                         margin: EdgeInsets.only(right: 12.0),
                         decoration: BoxDecoration(
                           color: Colors.grey[850],

@@ -1,3 +1,4 @@
+// dart format width=80
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
 // **************************************************************************
@@ -41,6 +42,8 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i436.GetSeasonDetails>(() => _i436.GetSeasonDetails());
     gh.factory<_i401.GetAnimeDetailsUseCase>(
         () => _i401.GetAnimeDetailsUseCase(gh<_i789.AnimeRepository>()));
+    gh.factory<_i618.GetAnimeDetailsUseCase>(
+        () => _i618.GetAnimeDetailsUseCase(gh<_i789.AnimeRepository>()));
     gh.factory<_i664.GetAnimeEpisodesUseCase>(
         () => _i664.GetAnimeEpisodesUseCase(gh<_i789.AnimeRepository>()));
     gh.factory<_i26.GetHomeUseCase>(
@@ -49,8 +52,6 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i677.GetLinksUseCase(gh<_i789.AnimeRepository>()));
     gh.factory<_i800.SearchAnimeUseCase>(
         () => _i800.SearchAnimeUseCase(gh<_i789.AnimeRepository>()));
-    gh.factory<_i618.GetAnimeDetailsUseCase>(
-        () => _i618.GetAnimeDetailsUseCase(gh<_i789.AnimeRepository>()));
     gh.factory<_i591.GetMediaDetails>(
         () => _i591.GetMediaDetails(gh<_i789.TMDBRepository>()));
     gh.factory<_i675.GetTrending>(

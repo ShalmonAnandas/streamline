@@ -1,0 +1,67 @@
+{
+  // See https://go.microsoft.com/fwlink/?LinkId=733558
+  // for the documentation about the tasks.json format
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "melos analyze",
+      "type": "shell",
+      "command": "~/.pub-cache/bin/melos run analyze",
+      "group": "test",
+      "problemMatcher": [],
+      "options": {
+        "env": {
+          "PATH": "${env:PATH}:$HOME/.pub-cache/bin"
+        }
+      }
+    },
+    {
+      "label": "melos format",
+      "type": "shell",
+      "command": "~/.pub-cache/bin/melos run format",
+      "group": "build",
+      "problemMatcher": [],
+      "options": {
+        "env": {
+          "PATH": "${env:PATH}:$HOME/.pub-cache/bin"
+        }
+      }
+    },
+    {
+      "label": "melos test",
+      "type": "shell",
+      "command": "~/.pub-cache/bin/melos run test",
+      "group": "test",
+      "problemMatcher": [],
+      "options": {
+        "env": {
+          "PATH": "${env:PATH}:$HOME/.pub-cache/bin"
+        }
+      }
+    },
+    {
+      "label": "melos pub_get",
+      "type": "shell",
+      "command": "~/.pub-cache/bin/melos run pub_get",
+      "group": "build",
+      "problemMatcher": [],
+      "options": {
+        "env": {
+          "PATH": "${env:PATH}:$HOME/.pub-cache/bin"
+        }
+      }
+    },
+    {
+      "label": "melos build_runner_watch",
+      "type": "shell",
+      "command": "~/.pub-cache/bin/melos run build_runner_watch",
+      "isBackground": true,
+      "problemMatcher": [],
+      "options": {
+        "env": {
+          "PATH": "${env:PATH}:$HOME/.pub-cache/bin"
+        }
+      }
+    }
+  ]
+}

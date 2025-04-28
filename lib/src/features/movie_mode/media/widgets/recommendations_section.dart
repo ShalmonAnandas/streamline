@@ -21,6 +21,7 @@ class RecommendationsSection extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final orientation = MediaQuery.of(context).orientation;
     final recommendationsAsync =
         ref.watch(recommendationsProvider(GetRecommendationsParams(
       movieId: mediaId,
@@ -55,7 +56,9 @@ class RecommendationsSection extends ConsumerWidget {
               );
             }
             return SizedBox(
-              height: 220, // Adjust height as needed for MediaCard
+              height: orientation == Orientation.landscape
+                  ? 350
+                  : 220, // Adjust height as needed for MediaCard
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
                 itemCount: recommendations.length,

@@ -7,9 +7,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:streamline/core/base_widget/riverpod_stateless_widget.dart';
 import 'package:streamline/src/features/movie_mode/media/providers/media_provider.dart';
+import 'package:flutter/gestures.dart'; // Import required for ScrollConfiguration
 
 // Import new widgets
-import 'widgets/media_app_bar.dart';
 import 'widgets/title_and_metadata.dart';
 import 'widgets/genre_chips.dart';
 import 'widgets/action_buttons.dart';
@@ -41,7 +41,11 @@ class _MyWidgetState extends ConsumerState<MediaUI>
       return estimatedItemHeight;
     }
     final season = seasons[seasonIndex];
-    final episodeCount = season.episodeCount ?? 0;
+    // Use episode count from the Season object if available, otherwise estimate or fetch details
+    // For now, we'll use a placeholder count or fetch details if needed.
+    // Let's assume season.episodeCount is available from the initial fetch.
+    final episodeCount =
+        season.episodeCount ?? 5; // Default to 5 if null for calculation
 
     if (episodeCount == 0) {
       // Return a minimum height even for seasons with 0 episodes to show the message
@@ -88,6 +92,7 @@ class _MyWidgetState extends ConsumerState<MediaUI>
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
+    final orientation = MediaQuery.of(context).orientation; // Get orientation
 
     return RiverpodStatelessWidget<MediaDetailsModel>(
       provider: MediaDetailsProvider(GetMediaDetailsParams(
@@ -96,206 +101,494 @@ class _MyWidgetState extends ConsumerState<MediaUI>
       )),
       child: (model) {
         final newSeasonCount = model.seasons?.length ?? 0;
-        int previousIndex = _tabController
-            .index; // Store current index before potential rebuild
+        int previousIndex = _tabController.index;
 
         // Update TabController length if the season count has changed
         if (_tabController.length != newSeasonCount) {
-          // Remove listener from the old controller before disposing it
-          // This is important to avoid memory leaks or unwanted behavior
           _tabController.removeListener(_onTabChanged);
-          // Keep track of the old controller to dispose it after the build cycle
-          // to avoid issues if the listener tries to access it during the transition.
-          // However, disposing immediately is usually correct if managed carefully.
           _tabController.dispose();
-
-          // Create a new controller with the correct length
           _tabController = TabController(
             length: newSeasonCount,
             vsync: this,
-            // Restore previous index if valid, otherwise default to 0
             initialIndex: (previousIndex >= 0 && previousIndex < newSeasonCount)
                 ? previousIndex
                 : 0,
           );
-          // Add listener to the new controller
           _tabController.addListener(_onTabChanged);
         }
 
-        // Calculate the height based on the *currently selected* season's episode count
-        // This happens on every build, ensuring the height is correct after tab changes (due to setState)
-        // or controller recreation.
         final double currentSeasonHeight = _calculateHeightForSeason(
-          _tabController.index, // Use the current index of the controller
+          _tabController.index,
           model.seasons,
         );
 
-        return Scaffold(
-          backgroundColor: const Color(0xFF0F0F0F),
-          body: SingleChildScrollView(
-            child: Column(
+        // Define content sections to avoid repetition
+        final Widget titleAndMeta = TitleAndMetadata(
+          title: model.title ?? model.name ?? 'No Title',
+          year: _getYear(model.releaseDate ?? model.firstAirDate),
+          ratingWidget: _buildStarRating(model.voteAverage),
+          duration: _formatDuration(model.runtime),
+        );
+        final Widget genreChips = GenreChips(genres: model.genres);
+        final Widget actionButtons = ActionButtons(media: model);
+        final Widget storylineSection =
+            StorylineSection(overview: model.overview);
+        final Widget recommendationsSection = RecommendationsSection(
+          mediaId: widget.id,
+          mediaType: widget.mediaType,
+        );
+
+        // Build Episodes Section conditionally
+        Widget buildEpisodesSection(Orientation orientation) {
+          // Accept orientation
+          if (widget.mediaType != 'movie' && newSeasonCount > 0) {
+            return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min, // Important for Column in Row
               children: [
-                // Use MediaAppBar widget
-                MediaAppBar(
-                  model: model,
-                  screenWidth: screenWidth,
-                  screenHeight: screenHeight,
+                const SizedBox(height: 36),
+                const Text(
+                  'Episodes',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0)
-                      .copyWith(top: 16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Use TitleAndMetadata widget
-                      TitleAndMetadata(
-                        title: model.title ?? model.name ?? 'No Title',
-                        year: _getYear(model.releaseDate ?? model.firstAirDate),
-                        ratingWidget: _buildStarRating(model.voteAverage),
-                        duration: _formatDuration(model.runtime),
-                      ),
-                      const SizedBox(height: 16),
-                      // Use GenreChips widget
-                      GenreChips(genres: model.genres),
-                      const SizedBox(height: 28),
-                      // Use ActionButtons widget
-                      ActionButtons(media: model),
-                      const SizedBox(height: 36),
-                      // Use StorylineSection widget
-                      StorylineSection(overview: model.overview),
-                      // Only show Episodes section for TV shows and if there are seasons
-                      if (widget.mediaType != 'movie' &&
-                          newSeasonCount > 0) ...[
-                        const SizedBox(height: 36), // Keep spacing consistent
-                        const Text(
-                          'Episodes',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
+                const SizedBox(height: 16),
+                TabBar(
+                  controller: _tabController,
+                  tabAlignment: TabAlignment.start,
+                  labelColor: Colors.white,
+                  unselectedLabelColor: Colors.grey,
+                  indicatorColor: Colors.white,
+                  isScrollable: true,
+                  dividerColor: Colors.transparent,
+                  tabs: List<Widget>.generate(newSeasonCount, (index) {
+                    return Tab(
+                        text: model.seasons?[index].name ??
+                            'Season \${index + 1}');
+                  }),
+                ),
+                const SizedBox(height: 16),
+                AnimatedContainer(
+                  duration: const Duration(milliseconds: 400),
+                  // Adjust height calculation if GridView items have different heights
+                  height: orientation == Orientation.portrait
+                      ? currentSeasonHeight // Use existing calculation for portrait
+                      : _calculateGridHeightForSeason(
+                          // New calculation for landscape grid
+                          _tabController.index,
+                          model.seasons,
+                          screenWidth, // Pass screen width for grid calculation
+                        ),
+                  child: TabBarView(
+                    controller: _tabController,
+                    children:
+                        List<Widget>.generate(newSeasonCount, (seasonIndex) {
+                      final season = model.seasons?[seasonIndex];
+                      if (season == null || season.seasonNumber == null) {
+                        return const Center(
+                          child: Text(
+                            'Season data unavailable.',
+                            style: TextStyle(color: Colors.grey),
                           ),
+                        );
+                      }
+                      final seasonProvider = seasonDetailsProvider(
+                        GetSeasonDetailsParams(
+                          widget.id,
+                          season.seasonNumber!,
                         ),
-                        const SizedBox(height: 16),
-                        TabBar(
-                          controller: _tabController,
-                          tabAlignment: TabAlignment.start,
-                          labelColor: Colors.white,
-                          unselectedLabelColor: Colors.grey,
-                          indicatorColor: Colors.white,
-                          isScrollable: true,
-                          dividerColor: Colors.transparent,
-                          tabs: List<Widget>.generate(newSeasonCount, (index) {
-                            return Tab(
-                                text: model.seasons?[index].name ??
-                                    'Season ${index + 1}');
-                          }),
-                        ),
-                        const SizedBox(height: 16),
-                        // Use the dynamically calculated height for the SizedBox
-                        AnimatedContainer(
-                          duration: const Duration(milliseconds: 400),
-                          height: currentSeasonHeight, // Apply dynamic height
-                          child: TabBarView(
-                            controller: _tabController,
-                            children: List<Widget>.generate(newSeasonCount,
-                                (seasonIndex) {
-                              final season = model.seasons?[seasonIndex];
-                              // Ensure season and season number are not null
-                              if (season == null ||
-                                  season.seasonNumber == null) {
+                      );
+                      return Consumer(
+                        builder: (context, ref, child) {
+                          final seasonDetailsAsync = ref.watch(seasonProvider);
+                          return seasonDetailsAsync.when(
+                            loading: () => orientation == Orientation.portrait
+                                ? ListView.builder(
+                                    // Shimmer List for Portrait
+                                    physics:
+                                        const NeverScrollableScrollPhysics(),
+                                    shrinkWrap: true,
+                                    itemCount: 5, // Placeholder count
+                                    padding: EdgeInsets.zero,
+                                    itemBuilder: (context, index) =>
+                                        const EpisodeItemShimmer(),
+                                  )
+                                : GridView.builder(
+                                    // Shimmer Grid for Landscape
+                                    physics:
+                                        const NeverScrollableScrollPhysics(),
+                                    shrinkWrap: true,
+                                    itemCount: 6, // Placeholder count for grid
+                                    padding: EdgeInsets.zero,
+                                    gridDelegate:
+                                        const SliverGridDelegateWithFixedCrossAxisCount(
+                                      crossAxisCount: 3,
+                                      childAspectRatio: 16 / 6,
+                                    ),
+                                    itemBuilder: (context, index) =>
+                                        const EpisodeItemShimmer(), // Reuse shimmer, might need adjustment for grid
+                                  ),
+                            error: (err, stack) => Center(
+                                child: Text('Error: \$err',
+                                    style: const TextStyle(color: Colors.red))),
+                            data: (seasonData) {
+                              final episodes = seasonData.episodes ?? [];
+                              if (episodes.isEmpty) {
                                 return const Center(
                                   child: Text(
-                                    'Season data unavailable.',
+                                    'No episodes available for this season.',
                                     style: TextStyle(color: Colors.grey),
                                   ),
                                 );
                               }
-
-                              // Use the seasonDetails provider for each tab
-                              final seasonProvider = seasonDetailsProvider(
-                                GetSeasonDetailsParams(
-                                  widget.id,
-                                  season.seasonNumber!,
-                                ),
-                              );
-
-                              // Use Consumer to watch the provider for this specific season
-                              return Consumer(
-                                builder: (context, ref, child) {
-                                  final seasonDetailsAsync =
-                                      ref.watch(seasonProvider);
-
-                                  return seasonDetailsAsync.when(
-                                    loading: () => ListView.builder(
-                                      physics:
-                                          const NeverScrollableScrollPhysics(),
-                                      shrinkWrap: true,
-                                      itemCount:
-                                          5, // Show 5 shimmer items while loading
-                                      padding: EdgeInsets.zero,
-                                      itemBuilder: (context, index) =>
-                                          const EpisodeItemShimmer(),
-                                    ),
-                                    error: (err, stack) => Center(
-                                        child: Text('Error: $err',
-                                            style: const TextStyle(
-                                                color: Colors.red))),
-                                    data: (seasonData) {
-                                      final episodes =
-                                          seasonData.episodes ?? [];
-                                      if (episodes.isEmpty) {
-                                        return const Center(
-                                          child: Text(
-                                            'No episodes available for this season.',
-                                            style:
-                                                TextStyle(color: Colors.grey),
-                                          ),
-                                        );
-                                      }
-
-                                      // Build the list using fetched episode data
-                                      return ListView.builder(
-                                        physics:
-                                            const NeverScrollableScrollPhysics(),
-                                        shrinkWrap: true,
-                                        itemCount: episodes.length,
-                                        padding: EdgeInsets.zero,
-                                        itemBuilder: (context, episodeIndex) {
-                                          final episode =
-                                              episodes[episodeIndex];
-                                          // Replace ListTile with custom EpisodeItem
-                                          return EpisodeItem(
-                                            episode: episode,
-                                            onTap: () {
-                                              // TODO: Implement episode action
-                                            },
-                                          );
-                                        },
-                                      );
-                                    },
-                                  );
-                                },
-                              );
-                            }),
-                          ),
-                        ),
-                      ],
-                      const SizedBox(height: 30),
-                      RecommendationsSection(
-                        mediaId: widget.id,
-                        mediaType: widget.mediaType,
-                      ),
-                      const SizedBox(height: 30), // Ensure some bottom padding
-                    ],
+                              // Conditional builder based on orientation
+                              if (orientation == Orientation.portrait) {
+                                return ListView.builder(
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  shrinkWrap: true,
+                                  itemCount: episodes.length,
+                                  padding: EdgeInsets.zero,
+                                  itemBuilder: (context, episodeIndex) {
+                                    final episode = episodes[episodeIndex];
+                                    return EpisodeItem(
+                                      episode: episode,
+                                      onTap: () {
+                                        // TODO: Implement episode action
+                                      },
+                                    );
+                                  },
+                                );
+                              } else {
+                                // Landscape: Use GridView.builder
+                                return GridView.builder(
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  shrinkWrap: true,
+                                  itemCount: episodes.length,
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal:
+                                          4), // Add some padding for grid
+                                  gridDelegate:
+                                      const SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 3,
+                                    childAspectRatio: 16 / 6,
+                                  ),
+                                  itemBuilder: (context, episodeIndex) {
+                                    final episode = episodes[episodeIndex];
+                                    return EpisodeItem(
+                                      episode: episode,
+                                      onTap: () {
+                                        // TODO: Implement episode action
+                                      },
+                                    );
+                                  },
+                                );
+                              }
+                            },
+                          );
+                        },
+                      );
+                    }),
                   ),
                 ),
               ],
+            );
+          } else {
+            return const SizedBox.shrink(); // Return empty space if not TV show
+          }
+        }
+
+        // Poster Widget (extracted logic from MediaAppBar)
+        Widget buildPoster() {
+          // Use screen height/width for aspect ratio calculation if needed
+          // For landscape, let's aim for roughly half the screen width
+          final posterWidth = orientation == Orientation.landscape
+              ? screenWidth * 0.70 // Adjust fraction as needed
+              : screenWidth;
+          // Calculate height based on a common aspect ratio (e.g., 2:3)
+          final posterHeight = orientation == Orientation.landscape
+              ? screenHeight // Adjust fraction as needed
+              : screenHeight * 0.5; // Keep portrait height
+
+          return SizedBox(
+            width: posterWidth,
+            height: posterHeight,
+            child: Stack(
+              fit: StackFit.expand,
+              children: [
+                model.posterPath != null
+                    ? CachedNetworkImage(
+                        imageUrl:
+                            'https://image.tmdb.org/t/p/original/${model.backdropPath}',
+                        fit: BoxFit.cover,
+                        placeholder: (context, url) => Shimmer.fromColors(
+                          baseColor: Colors.grey[850]!,
+                          highlightColor: Colors.grey[800]!,
+                          child: Container(color: Colors.white),
+                        ),
+                        errorWidget: (context, url, error) =>
+                            const Icon(Icons.error, color: Colors.red),
+                      )
+                    : Container(
+                        color: Colors.grey[900],
+                        child: const Center(
+                            child: Icon(Icons.movie,
+                                color: Colors.grey, size: 50)),
+                      ),
+                // Gradient overlay
+                Container(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        Colors.transparent,
+                        const Color(0xFF0F0F0F).withOpacity(0.8),
+                        const Color(0xFF0F0F0F),
+                      ],
+                      begin: orientation == Orientation.landscape
+                          ? Alignment.centerLeft
+                          : Alignment.topCenter,
+                      end: orientation == Orientation.landscape
+                          ? Alignment.centerRight
+                          : Alignment.bottomCenter,
+                      stops: orientation == Orientation.landscape
+                          ? [0.3, 0.6, 1.0]
+                          : [0.5, 0.8, 1.0],
+                    ),
+                  ),
+                ),
+                if (orientation == Orientation.landscape)
+                  Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [
+                          Colors.transparent,
+                          const Color(0xFF0F0F0F).withOpacity(0.8),
+                          const Color(0xFF0F0F0F),
+                        ],
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        stops: [0.7, 0.9, 0.95],
+                      ),
+                    ),
+                  ),
+                // Back button (only needed in portrait here, handled differently in landscape)
+                if (orientation == Orientation.portrait)
+                  Positioned(
+                    top: MediaQuery.of(context).padding.top + 10,
+                    left: 10,
+                    child: IconButton(
+                      icon: const Icon(Icons.arrow_back, color: Colors.white),
+                      onPressed: () => Navigator.of(context).pop(),
+                    ),
+                  ),
+              ],
+            ),
+          );
+        }
+
+        // --- Build Layout based on Orientation ---
+        return Scaffold(
+          backgroundColor: const Color(0xFF0F0F0F),
+          // Use ScrollConfiguration to allow scrolling with mouse drag on desktop/web
+          body: ScrollConfiguration(
+            behavior: ScrollConfiguration.of(context).copyWith(
+              dragDevices: {
+                PointerDeviceKind.touch,
+                PointerDeviceKind.mouse,
+              },
+            ),
+            child: SingleChildScrollView(
+              child: orientation == Orientation.portrait
+                  ? _buildPortraitLayout(
+                      context,
+                      model,
+                      buildPoster(), // Pass the poster widget
+                      titleAndMeta,
+                      genreChips,
+                      actionButtons,
+                      storylineSection,
+                      buildEpisodesSection(orientation), // Pass orientation
+                      recommendationsSection,
+                    )
+                  : _buildLandscapeLayout(
+                      context,
+                      model,
+                      buildPoster(), // Pass the poster widget
+                      titleAndMeta,
+                      genreChips,
+                      actionButtons,
+                      storylineSection,
+                      buildEpisodesSection(orientation), // Pass orientation
+                      recommendationsSection,
+                      screenWidth, // Pass screenWidth for layout calculations
+                      screenHeight, // Pass screenHeight
+                    ),
             ),
           ),
         );
       },
     );
+  }
+
+  // --- Portrait Layout ---
+  Widget _buildPortraitLayout(
+    BuildContext context,
+    MediaDetailsModel model,
+    Widget posterWidget,
+    Widget titleAndMeta,
+    Widget genreChips,
+    Widget actionButtons,
+    Widget storylineSection,
+    Widget episodesSection,
+    Widget recommendationsSection,
+  ) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        posterWidget, // Use the passed poster widget
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0).copyWith(
+              top: 16.0), // Adjust top padding as poster handles status bar
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              titleAndMeta,
+              const SizedBox(height: 16),
+              genreChips,
+              const SizedBox(height: 28),
+              actionButtons,
+              const SizedBox(height: 36),
+              storylineSection,
+              episodesSection, // Conditionally built episodes section
+              const SizedBox(height: 30),
+              recommendationsSection,
+              const SizedBox(height: 30), // Bottom padding
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  // --- Landscape Layout ---
+  Widget _buildLandscapeLayout(
+    BuildContext context,
+    MediaDetailsModel model,
+    Widget posterWidget,
+    Widget titleAndMeta,
+    Widget genreChips,
+    Widget actionButtons,
+    Widget storylineSection,
+    Widget episodesSection,
+    Widget recommendationsSection,
+    double screenWidth,
+    double screenHeight,
+  ) {
+    // Add a SafeArea here to handle notches/system UI in landscape
+    return SafeArea(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Stack(
+            alignment: Alignment.topRight,
+            // fit: StackFit.expand,
+            // crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Left side: Poster
+
+              SizedBox(
+                width: screenWidth, // Adjust as needed
+                height: screenHeight *
+                    1.2, // Adjust to fit content height potentially
+                child: posterWidget, // Use the passed poster widget
+              ),
+
+              // Right side: Details, Actions, Episodes
+              SizedBox(
+                width: screenWidth * 0.60,
+                child: SingleChildScrollView(
+                  // Make right side scrollable independently
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 20.0, vertical: 16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Align(
+                        alignment: Alignment.topLeft,
+                        child: IconButton(
+                          icon:
+                              const Icon(Icons.arrow_back, color: Colors.white),
+                          onPressed: () => Navigator.of(context).pop(),
+                        ),
+                      ),
+
+                      const SizedBox(height: 10), // Space below back button
+                      titleAndMeta,
+                      const SizedBox(height: 16),
+                      genreChips,
+                      const SizedBox(height: 28),
+                      actionButtons,
+                      const SizedBox(height: 36),
+                      storylineSection,
+                      episodesSection,
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+          // Recommendations below the Row, spanning full width
+          Padding(
+            padding:
+                const EdgeInsets.symmetric(horizontal: 16.0).copyWith(top: 30),
+            child: recommendationsSection,
+          ),
+          const SizedBox(height: 30), // Bottom padding
+        ],
+      ),
+    );
+  }
+
+  // Helper to calculate height for GridView based on items and cross axis count
+  double _calculateGridHeightForSeason(
+      int seasonIndex, List<Season>? seasons, double screenWidth) {
+    const double maxCrossAxisExtent = 400;
+    const double childAspectRatio = 16 / 7;
+    const double mainAxisSpacing = 8;
+    const double itemHeight = maxCrossAxisExtent /
+        childAspectRatio; // Calculate item height based on width and aspect ratio
+
+    if (seasons == null ||
+        seasons.isEmpty ||
+        seasonIndex < 0 ||
+        seasonIndex >= seasons.length) {
+      return itemHeight + mainAxisSpacing; // Default height for one row
+    }
+
+    final season = seasons[seasonIndex];
+    final episodeCount = season.episodeCount ?? 5; // Default estimate
+
+    if (episodeCount == 0) {
+      return itemHeight +
+          mainAxisSpacing; // Min height for "no episodes" message row
+    }
+
+    // Calculate how many items fit horizontally
+    // Subtract padding if GridView has horizontal padding
+    final availableWidth = screenWidth - 8; // Assuming 4 padding on each side
+    final crossAxisCount = (availableWidth / (maxCrossAxisExtent + 8))
+        .floor(); // +8 for crossAxisSpacing
+    final effectiveCrossAxisCount =
+        crossAxisCount > 0 ? crossAxisCount : 1; // Ensure at least 1 column
+
+    // Calculate number of rows needed
+    final rowCount = (episodeCount / effectiveCrossAxisCount).ceil();
+
+    // Calculate total height: (rows * itemHeight) + ((rows - 1) * spacing)
+    // Add extra spacing if needed (e.g., top/bottom padding of the grid itself)
+    return (rowCount * itemHeight) + ((rowCount - 1) * mainAxisSpacing);
   }
 
   // Helper to extract year - Accepts DateTime?
