@@ -15,7 +15,7 @@ mixin TMDBApiConstants {
     return "$tmdbBaseUrl/trending/$mediaType?page=$page";
   }
 
-  String get tmdbSearchURL => "$tmdbBaseUrl/3/search/multi?query=";
+  String get tmdbSearchURL => "$tmdbBaseUrl/search/multi?query=";
 
   String tmdbMediaDetailsUrl(String mediaType, int id) {
     return "$tmdbBaseUrl/details/$mediaType/$id";
