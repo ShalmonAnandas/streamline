@@ -89,3 +89,20 @@ class MediaSave extends _$MediaSave {
     }
   }
 }
+
+@riverpod
+Future<SeasonModel> seasonDetails(
+    AutoDisposeFutureProviderRef ref, GetSeasonDetailsParams params) async {
+  final tmdbRepo = getIt<TMDBRepository>();
+
+  final response = await tmdbRepo.getSeasonDetails(params);
+
+  return response.fold(
+    (error) {
+      return Future.error(error, StackTrace.current);
+    },
+    (seasonModel) {
+      return seasonModel;
+    },
+  );
+}

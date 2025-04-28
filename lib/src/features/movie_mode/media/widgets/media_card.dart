@@ -1,8 +1,8 @@
 // New MediaCard Widget
 import 'package:domain/domain.dart';
 import 'package:flutter/material.dart';
-import 'package:streamline/src/features/media/media_ui.dart';
-import 'package:streamline/src/features/media/widgets/recommendations_section.dart';
+import 'package:streamline/src/features/movie_mode/media/media_ui.dart';
+import 'package:streamline/src/features/movie_mode/media/widgets/recommendations_section.dart';
 
 class MediaCard extends StatelessWidget {
   final MediaModel media;

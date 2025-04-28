@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:streamline/src/features/media/media_ui.dart'; // Import MediaUI
+import 'package:streamline/src/features/movie_mode/media/media_ui.dart'; // Import MediaUI
 import 'library_providers.dart'; // Import the new provider
 
 // 1. Convert back to ConsumerWidget

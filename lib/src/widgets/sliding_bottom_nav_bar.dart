@@ -76,10 +76,10 @@ class SlidingBottomNavBar extends StatelessWidget {
                       boxShadow: [
                         BoxShadow(
                           color:
-                              items[currentIndex].activeColor.withOpacity(0.7),
-                          blurRadius: 25.0,
-                          spreadRadius: 5.0,
-                          offset: Offset(0, 10), // Keep the downward offset
+                              items[currentIndex].activeColor.withOpacity(0.5),
+                          blurRadius: 25,
+                          spreadRadius: 1,
+                          offset: Offset(0, 30), // Keep the downward offset
                         ),
                       ],
                     ),

@@ -11,4 +11,7 @@ abstract class TMDBRemoteDs {
   // Add this method
   Future<Either<GenericError, ResultsModel>> getRecommendations(
       GetRecommendationsParams params);
+
+  Future<Either<GenericError, SeasonModel>> getSeasonDetails(
+      GetSeasonDetailsParams params);
 }

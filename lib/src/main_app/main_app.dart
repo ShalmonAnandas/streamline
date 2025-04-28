@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:streamline/src/features/home_screen/home_ui.dart';
+import 'package:streamline/src/features/movie_mode/home/home_ui.dart';
 
 class MainApp extends StatelessWidget {
   const MainApp({super.key});

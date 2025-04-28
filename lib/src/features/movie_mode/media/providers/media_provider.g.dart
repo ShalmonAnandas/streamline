@@ -6,7 +6,7 @@ part of 'media_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$mediaDetailsHash() => r'a8a157ca41ace3de0dcf358ccefbbc98f3c47d7a';
+String _$mediaDetailsHash() => r'71cd333d7db58b708a22985b69c28e8c2e703eb4';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -157,6 +157,137 @@ class _MediaDetailsProviderElement
 
   @override
   GetMediaDetailsParams get params => (origin as MediaDetailsProvider).params;
+}
+
+String _$seasonDetailsHash() => r'8da60462584438e7a02ff68ea024bb3597ab53b5';
+
+/// See also [seasonDetails].
+@ProviderFor(seasonDetails)
+const seasonDetailsProvider = SeasonDetailsFamily();
+
+/// See also [seasonDetails].
+class SeasonDetailsFamily extends Family<AsyncValue<SeasonModel>> {
+  /// See also [seasonDetails].
+  const SeasonDetailsFamily();
+
+  /// See also [seasonDetails].
+  SeasonDetailsProvider call(
+    GetSeasonDetailsParams params,
+  ) {
+    return SeasonDetailsProvider(
+      params,
+    );
+  }
+
+  @override
+  SeasonDetailsProvider getProviderOverride(
+    covariant SeasonDetailsProvider provider,
+  ) {
+    return call(
+      provider.params,
+    );
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'seasonDetailsProvider';
+}
+
+/// See also [seasonDetails].
+class SeasonDetailsProvider extends AutoDisposeFutureProvider<SeasonModel> {
+  /// See also [seasonDetails].
+  SeasonDetailsProvider(
+    GetSeasonDetailsParams params,
+  ) : this._internal(
+          (ref) => seasonDetails(
+            ref as SeasonDetailsRef,
+            params,
+          ),
+          from: seasonDetailsProvider,
+          name: r'seasonDetailsProvider',
+          debugGetCreateSourceHash:
+              const bool.fromEnvironment('dart.vm.product')
+                  ? null
+                  : _$seasonDetailsHash,
+          dependencies: SeasonDetailsFamily._dependencies,
+          allTransitiveDependencies:
+              SeasonDetailsFamily._allTransitiveDependencies,
+          params: params,
+        );
+
+  SeasonDetailsProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.params,
+  }) : super.internal();
+
+  final GetSeasonDetailsParams params;
+
+  @override
+  Override overrideWith(
+    FutureOr<SeasonModel> Function(SeasonDetailsRef provider) create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: SeasonDetailsProvider._internal(
+        (ref) => create(ref as SeasonDetailsRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        params: params,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<SeasonModel> createElement() {
+    return _SeasonDetailsProviderElement(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is SeasonDetailsProvider && other.params == params;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, params.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+mixin SeasonDetailsRef on AutoDisposeFutureProviderRef<SeasonModel> {
+  /// The parameter `params` of this provider.
+  GetSeasonDetailsParams get params;
+}
+
+class _SeasonDetailsProviderElement
+    extends AutoDisposeFutureProviderElement<SeasonModel>
+    with SeasonDetailsRef {
+  _SeasonDetailsProviderElement(super.provider);
+
+  @override
+  GetSeasonDetailsParams get params => (origin as SeasonDetailsProvider).params;
 }
 
 String _$mediaSaveHash() => r'1749d3ceb15dbe0183b3b07a0b9e54a702528148';

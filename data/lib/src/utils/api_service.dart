@@ -9,25 +9,24 @@ class APIClient {
   final _apiClient = Dio();
 
   APIClient() {
-    _apiClient.interceptors.add(PrettyDioLogger(requestHeader: true));
+    _apiClient.interceptors.add(PrettyDioLogger());
   }
 
-  Future<Either<GenericError, Response<dynamic>>> getRequest(
+  Future<Either<GenericError, Map<String, dynamic>>> getRequest(
       {required String url, Map<String, dynamic>? headers}) async {
     try {
-      final response = await _apiClient.get(url,
-          options: Options(
-              headers: headers,
-              sendTimeout: Duration(seconds: 30),
-              receiveTimeout: Duration(seconds: 30)));
+      final response = await _apiClient.get(
+        url,
+        options: Options(headers: headers),
+      );
 
       if (response.statusCode == 200) {
-        return right(response);
+        return right(response.data);
       } else {
         return left(
           GenericError(
-            errorCode: response.statusCode ?? 0,
-            message: response.statusMessage ?? "Unknown Error",
+            errorCode: response.statusCode ?? 500,
+            message: response.statusMessage ?? 'Unknown Error',
             cause: Exception(response.data),
           ),
         );
@@ -39,11 +38,11 @@ class APIClient {
   }
 
   Either<GenericError, M> apiSafeGuard<M>(
-      Either<GenericError, Response<dynamic>> data,
+      Either<GenericError, Map<String, dynamic>> data,
       M Function(Map<String, dynamic> dataMap) onTransform) {
     try {
       return data.fold((GenericError e) => Left(e),
-          (Response<dynamic> d) => Right(onTransform(d.data)));
+          (Map<String, dynamic> d) => Right(onTransform(d)));
     } catch (e) {
       return Left(GenericError(cause: Exception(e), errorCode: 0));
     }

@@ -1,5 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:domain/domain.dart';
+import 'package:domain/src/model/tmdb/media/season_model.dart';
+import 'package:domain/src/usecase/tmdb/get_season_details.dart';
 
 abstract class TMDBRepository {
   Future<Either<GenericError, List<MediaModel>?>> getTrending(
@@ -22,4 +24,7 @@ abstract class TMDBRepository {
 
   // Add method signature to remove saved media
   Future<void> removeSavedMedia(int mediaId);
+
+  Future<Either<GenericError, SeasonModel>> getSeasonDetails(
+      GetSeasonDetailsParams params);
 }

@@ -121,7 +121,10 @@ class ActionButtons extends ConsumerWidget {
                   onPressed: () {/* TODO: Watch now action using media */},
                   icon: const Icon(Amicons.iconly_show_curved,
                       color: Colors.white, size: 20),
-                  label: Text('Watch now',
+                  label: Text(
+                      media.originalTitle == null
+                          ? 'Season 1 Episode 1'
+                          : 'Watch now',
                       style: GoogleFonts.quicksand(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,

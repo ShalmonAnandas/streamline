@@ -1,3 +1,4 @@
+import 'package:domain/domain.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -23,16 +24,19 @@ class RiverpodStatelessWidget<T> extends ConsumerWidget {
       loading:
           loading ?? () => const Center(child: CircularProgressIndicator()),
       error: errorWidget ??
-          (error, stackTrace) => Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text('Failed to load movies: $error'),
-                    ElevatedButton(
-                      onPressed: () => ref.refresh(provider),
-                      child: const Text('Retry'),
-                    ),
-                  ],
+          (error, stackTrace) => Scaffold(
+                body: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                          'Failed to load movies: ${(error as GenericError).cause}'),
+                      ElevatedButton(
+                        onPressed: () => ref.refresh(provider),
+                        child: const Text('Retry'),
+                      ),
+                    ],
+                  ),
                 ),
               ),
     );

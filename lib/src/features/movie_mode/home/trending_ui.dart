@@ -1,11 +1,11 @@
 import 'package:amicons/amicons.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:domain/domain.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:streamline/src/features/home_screen/home_provider.dart';
-import 'package:streamline/src/features/media/media_ui.dart';
-import 'package:streamline/src/widgets/instant_network_image.dart'; // Import InstantNetworkImage
+import 'package:streamline/src/features/movie_mode/home/home_provider.dart';
+import 'package:streamline/src/features/movie_mode/media/media_ui.dart';
 
 const String imageBaseUrl = 'https://image.tmdb.org/t/p/original';
 
@@ -183,13 +183,10 @@ class _TrendingUIState extends ConsumerState<TrendingUI> {
               child: Card(
                 clipBehavior: Clip.antiAlias,
                 child: posterPath != null && posterPath.isNotEmpty
-                    ? InstantNetworkImage(
+                    ? CachedNetworkImage(
                         // Replace Image.network with InstantNetworkImage
                         imageUrl: imageUrl,
                         fit: BoxFit.cover,
-                        placeholder: (context, url) => const Center(
-                            child:
-                                CircularProgressIndicator()), // Provide a placeholder
                         errorWidget: (context, url, error) {
                           // Provide an error widget
                           debugPrint('Error loading image: $error');

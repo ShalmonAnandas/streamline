@@ -180,4 +180,24 @@ class TMDBLocalDsImpl extends TMDBLocalDs {
     }
     // If the list is null or empty, there's nothing to remove
   }
+
+  @override
+  void cacheSeasonDetails<T>(T data, GetSeasonDetailsParams params) async {
+    final cacheKey = "season_details_${params.id}_${params.seasonNumber}";
+    if (data is SeasonModel) {
+      _cacheService.putInCache<SeasonModel>(cacheKey, data);
+    }
+  }
+
+  @override
+  Future<SeasonModel?> getSeasonDetails(GetSeasonDetailsParams params) async {
+    final cacheKey = "season_details_${params.id}_${params.seasonNumber}";
+    final cachedData =
+        await _cacheService.getFromCache<Map<String, dynamic>>(cacheKey);
+    if (cachedData != null) {
+      return SeasonModel.fromJson(cachedData);
+    } else {
+      return null;
+    }
+  }
 }

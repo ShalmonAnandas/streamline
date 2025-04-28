@@ -15,7 +15,9 @@ import '../../domain.dart' as _i789;
 import '../repository/tmdb_repository.dart' as _i681;
 import '../usecase/tmdb/get_media_details.dart' as _i591;
 import '../usecase/tmdb/get_recommendations_usecase.dart' as _i666;
+import '../usecase/tmdb/get_season_details.dart' as _i436;
 import '../usecase/tmdb/get_trending.dart' as _i675;
+import '../usecase/tmdb/save_media_usecase.dart' as _i410;
 import '../usecase/tmdb/search_tmdb.dart' as _i493;
 
 extension GetItInjectableX on _i174.GetIt {
@@ -29,6 +31,7 @@ extension GetItInjectableX on _i174.GetIt {
       environment,
       environmentFilter,
     );
+    gh.factory<_i436.GetSeasonDetails>(() => _i436.GetSeasonDetails());
     gh.factory<_i591.GetMediaDetails>(
         () => _i591.GetMediaDetails(gh<_i789.TMDBRepository>()));
     gh.factory<_i675.GetTrending>(
@@ -37,6 +40,8 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i493.SearchTmdb(gh<_i681.TMDBRepository>()));
     gh.factory<_i666.GetRecommendationsUseCase>(
         () => _i666.GetRecommendationsUseCase(gh<_i789.TMDBRepository>()));
+    gh.factory<_i410.SaveMediaUseCase>(
+        () => _i410.SaveMediaUseCase(gh<_i789.TMDBRepository>()));
     return this;
   }
 }

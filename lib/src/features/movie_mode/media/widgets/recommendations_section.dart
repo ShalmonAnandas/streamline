@@ -2,11 +2,11 @@ import 'package:domain/domain.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:streamline/src/features/media/providers/recommendations_provider.dart';
-import 'package:streamline/src/features/media/widgets/media_card.dart';
+import 'package:streamline/src/features/movie_mode/media/providers/recommendations_provider.dart';
+import 'package:streamline/src/features/movie_mode/media/widgets/media_card.dart';
 
 // Define the base URL for TMDB images (you might want to centralize this)
-const String tmdbImageBaseUrl = 'https://image.tmdb.org/t/p/original';
+const String tmdbImageBaseUrl = 'https://image.tmdb.org/t/p/w500';
 
 class RecommendationsSection extends ConsumerWidget {
   // Changed to ConsumerWidget

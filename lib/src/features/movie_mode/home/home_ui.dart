@@ -4,16 +4,16 @@ import 'package:amicons/amicons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:streamline/src/features/home_screen/home_provider.dart';
-import 'package:streamline/src/features/search/search_ui.dart';
+import 'package:streamline/src/features/movie_mode/home/home_provider.dart';
+import 'package:streamline/src/features/movie_mode/search/search_ui.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:streamline/src/widgets/parallax_carousel.dart'; // Import the new widget
 import 'package:streamline/src/widgets/sliding_bottom_nav_bar.dart'; // Import the custom widget
-import 'package:streamline/src/features/media/media_ui.dart'; // Import MediaUI
+import 'package:streamline/src/features/movie_mode/media/media_ui.dart'; // Import MediaUI
 import 'package:domain/domain.dart'; // Import MediaModel
-import 'package:streamline/src/features/library/library_ui.dart'; // Import LibraryScreen
+import 'package:streamline/src/features/movie_mode/library/library_ui.dart'; // Import LibraryScreen
 import 'package:streamline/src/features/profile/profile_ui.dart'; // Import ProfileScreen
-import 'package:streamline/src/features/home_screen/trending_ui.dart'; // Import TrendingUI
+import 'package:streamline/src/features/movie_mode/home/trending_ui.dart'; // Import TrendingUI
 
 class HomeUI extends ConsumerStatefulWidget {
   const HomeUI({super.key});
@@ -163,19 +163,22 @@ class _HomeScreenState extends ConsumerState<HomeUI> {
           const ProfileScreen(), // Page 3: Profile (Placeholder)
         ],
       ),
-      bottomNavigationBar: SlidingBottomNavBar(
-        currentIndex: _currentIndex,
-        onTap: (index) {
-          // Animate to the selected page when bottom nav item is tapped
-          _pageController.animateToPage(
-            index,
-            duration: const Duration(milliseconds: 400),
-            curve: Curves.easeOutCubic,
-          );
-          // No need to call setState here as onPageChanged will handle it
-        },
-        items: _navBarItems,
-        curve: Curves.easeOutCubic,
+      bottomNavigationBar: SizedBox(
+        height: 65,
+        child: SlidingBottomNavBar(
+          currentIndex: _currentIndex,
+          onTap: (index) {
+            // Animate to the selected page when bottom nav item is tapped
+            _pageController.animateToPage(
+              index,
+              duration: const Duration(milliseconds: 400),
+              curve: Curves.easeOutCubic,
+            );
+            // No need to call setState here as onPageChanged will handle it
+          },
+          items: _navBarItems,
+          curve: Curves.easeOutCubic,
+        ),
       ),
     );
   }

@@ -1,12 +1,12 @@
 import 'package:dartz/dartz.dart';
+import 'package:data/src/ds/remote/tmdb/tmdb_api_constants.dart';
 import 'package:data/src/ds/remote/tmdb/tmdb_remote_ds.dart';
-import 'package:data/src/utils/api_constants.dart';
 import 'package:data/src/utils/api_service.dart';
 import 'package:domain/domain.dart';
 import 'package:injectable/injectable.dart';
 
 @Injectable(as: TMDBRemoteDs)
-class TMDBRemoteDSImpl extends TMDBRemoteDs with ApiConstants {
+class TMDBRemoteDSImpl extends TMDBRemoteDs with TMDBApiConstants {
   TMDBRemoteDSImpl(this._apiClient);
 
   final APIClient _apiClient;
@@ -67,5 +67,15 @@ class TMDBRemoteDSImpl extends TMDBRemoteDs with ApiConstants {
 
     return _apiClient.apiSafeGuard<ResultsModel>(
         response, ResultsModel.fromJson);
+  }
+
+  @override
+  Future<Either<GenericError, SeasonModel>> getSeasonDetails(
+      GetSeasonDetailsParams params) async {
+    final response = await _apiClient.getRequest(
+        url: tmdbSeasonDetailsUrl(params.id, params.seasonNumber),
+        headers: tmdbHeaders);
+
+    return _apiClient.apiSafeGuard<SeasonModel>(response, SeasonModel.fromJson);
   }
 }

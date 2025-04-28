@@ -2,6 +2,8 @@ import 'package:dartz/dartz.dart';
 import 'package:data/src/ds/local/tmdb/tmdb_local_ds.dart';
 import 'package:data/src/ds/remote/tmdb/tmdb_remote_ds.dart';
 import 'package:domain/domain.dart';
+import 'package:domain/src/model/tmdb/media/season_model.dart';
+import 'package:domain/src/usecase/tmdb/get_season_details.dart';
 import 'package:injectable/injectable.dart';
 
 @Injectable(as: TMDBRepository)
@@ -105,5 +107,26 @@ class TMDBRepositoryImpl extends TMDBRepository {
   @override
   Future<void> removeSavedMedia(int mediaId) async {
     return _tmdbLocalDs.removeSavedMedia(mediaId);
+  }
+
+  @override
+  Future<Either<GenericError, SeasonModel>> getSeasonDetails(
+      GetSeasonDetailsParams params) async {
+    final localResult = await _tmdbLocalDs.getSeasonDetails(params);
+
+    if (localResult != null) {
+      return right(localResult);
+    }
+
+    final remoteResult = await _tmdbRemoteDs.getSeasonDetails(params);
+
+    return remoteResult.fold(
+      (error) => Future.delayed(Duration(seconds: 2))
+          .then((_) => getSeasonDetails(params)), // Basic retry logic
+      (results) {
+        _tmdbLocalDs.cacheSeasonDetails<SeasonModel>(results, params);
+        return right(results);
+      },
+    );
   }
 }

@@ -11,4 +11,6 @@ abstract class TMDBLocalDs {
   Future<List<MediaDetailsModel>> getSavedMedia();
   Future<bool> isMediaSaved(int mediaId);
   Future<void> removeSavedMedia(int mediaId);
+  void cacheSeasonDetails<T>(T data, GetSeasonDetailsParams params);
+  Future<SeasonModel?> getSeasonDetails(GetSeasonDetailsParams params);
 }
