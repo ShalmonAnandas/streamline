@@ -15,8 +15,8 @@ class TMDBRemoteDSImpl extends TMDBRemoteDs with TMDBApiConstants {
   Future<Either<GenericError, ResultsModel>> getTrending(
       GetTrendingParams params) async {
     final response = await _apiClient.getRequest(
-        url: tmdbTrendingUrl(params.mediaType, params.page),
-        headers: tmdbHeaders);
+      url: tmdbTrendingUrl(params.mediaType, params.page),
+    );
 
     return _apiClient.apiSafeGuard<ResultsModel>(
         response, ResultsModel.fromJson);
@@ -28,7 +28,6 @@ class TMDBRemoteDSImpl extends TMDBRemoteDs with TMDBApiConstants {
   ) async {
     final response = await _apiClient.getRequest(
       url: '$tmdbSearchURL$searchQuery',
-      headers: tmdbHeaders,
     );
 
     final resultModel = _apiClient.apiSafeGuard<ResultsModel>(
@@ -46,11 +45,11 @@ class TMDBRemoteDSImpl extends TMDBRemoteDs with TMDBApiConstants {
   Future<Either<GenericError, MediaDetailsModel>> getMediaDetails(
       GetMediaDetailsParams params) async {
     final response = await _apiClient.getRequest(
-        url: tmdbMediaDetailsUrl(
-          params.mediaType,
-          params.id,
-        ),
-        headers: tmdbHeaders);
+      url: tmdbMediaDetailsUrl(
+        params.mediaType,
+        params.id,
+      ),
+    );
 
     return _apiClient.apiSafeGuard<MediaDetailsModel>(
         response, MediaDetailsModel.fromJson);
@@ -61,9 +60,9 @@ class TMDBRemoteDSImpl extends TMDBRemoteDs with TMDBApiConstants {
   Future<Either<GenericError, ResultsModel>> getRecommendations(
       GetRecommendationsParams params) async {
     final response = await _apiClient.getRequest(
-        url: tmdbRecommendationsUrl(
-            params.movieId, params.language, params.page, params.mediaType),
-        headers: tmdbHeaders);
+      url: tmdbRecommendationsUrl(
+          params.movieId, params.language, params.page, params.mediaType),
+    );
 
     return _apiClient.apiSafeGuard<ResultsModel>(
         response, ResultsModel.fromJson);
@@ -73,8 +72,8 @@ class TMDBRemoteDSImpl extends TMDBRemoteDs with TMDBApiConstants {
   Future<Either<GenericError, SeasonModel>> getSeasonDetails(
       GetSeasonDetailsParams params) async {
     final response = await _apiClient.getRequest(
-        url: tmdbSeasonDetailsUrl(params.id, params.seasonNumber),
-        headers: tmdbHeaders);
+      url: tmdbSeasonDetailsUrl(params.id, params.seasonNumber),
+    );
 
     return _apiClient.apiSafeGuard<SeasonModel>(response, SeasonModel.fromJson);
   }
