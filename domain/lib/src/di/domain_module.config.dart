@@ -13,6 +13,13 @@ import 'package:injectable/injectable.dart' as _i526;
 
 import '../../domain.dart' as _i789;
 import '../repository/tmdb_repository.dart' as _i681;
+import '../usecase/anime/usecases/get_anime_details_usecase.dart' as _i401;
+import '../usecase/anime/usecases/get_anime_episode_server_usercase.dart'
+    as _i618;
+import '../usecase/anime/usecases/get_anime_episodes_usecase.dart' as _i664;
+import '../usecase/anime/usecases/get_home_usecase.dart' as _i26;
+import '../usecase/anime/usecases/get_links_usecase.dart' as _i677;
+import '../usecase/anime/usecases/search_anime_usecase.dart' as _i800;
 import '../usecase/tmdb/get_media_details.dart' as _i591;
 import '../usecase/tmdb/get_recommendations_usecase.dart' as _i666;
 import '../usecase/tmdb/get_season_details.dart' as _i436;
@@ -32,6 +39,18 @@ extension GetItInjectableX on _i174.GetIt {
       environmentFilter,
     );
     gh.factory<_i436.GetSeasonDetails>(() => _i436.GetSeasonDetails());
+    gh.factory<_i401.GetAnimeDetailsUseCase>(
+        () => _i401.GetAnimeDetailsUseCase(gh<_i789.AnimeRepository>()));
+    gh.factory<_i664.GetAnimeEpisodesUseCase>(
+        () => _i664.GetAnimeEpisodesUseCase(gh<_i789.AnimeRepository>()));
+    gh.factory<_i26.GetHomeUseCase>(
+        () => _i26.GetHomeUseCase(gh<_i789.AnimeRepository>()));
+    gh.factory<_i677.GetLinksUseCase>(
+        () => _i677.GetLinksUseCase(gh<_i789.AnimeRepository>()));
+    gh.factory<_i800.SearchAnimeUseCase>(
+        () => _i800.SearchAnimeUseCase(gh<_i789.AnimeRepository>()));
+    gh.factory<_i618.GetAnimeDetailsUseCase>(
+        () => _i618.GetAnimeDetailsUseCase(gh<_i789.AnimeRepository>()));
     gh.factory<_i591.GetMediaDetails>(
         () => _i591.GetMediaDetails(gh<_i789.TMDBRepository>()));
     gh.factory<_i675.GetTrending>(
