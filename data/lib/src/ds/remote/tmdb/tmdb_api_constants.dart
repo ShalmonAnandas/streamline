@@ -1,5 +1,5 @@
 mixin TMDBApiConstants {
-  final String tmdbBaseUrl = "http://127.0.0.1:8000";
+  final String tmdbBaseUrl = "https://streamline-be.vercel.app";
 
   Map<String, dynamic> get tmdbHeaders {
     return {
