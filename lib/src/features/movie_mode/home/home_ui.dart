@@ -9,11 +9,10 @@ import 'package:streamline/src/features/movie_mode/search/search_ui.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:streamline/src/widgets/parallax_carousel.dart'; // Import the new widget
 import 'package:streamline/src/widgets/sliding_bottom_nav_bar.dart'; // Import the custom widget
-import 'package:streamline/src/features/movie_mode/media/media_ui.dart'; // Import MediaUI
 import 'package:domain/domain.dart'; // Import MediaModel
 import 'package:streamline/src/features/movie_mode/library/library_ui.dart'; // Import LibraryScreen
 import 'package:streamline/src/features/profile/profile_ui.dart'; // Import ProfileScreen
-import 'package:streamline/src/features/movie_mode/home/trending_ui.dart'; // Import TrendingUI
+import 'package:qlevar_router/qlevar_router.dart'; // Add Qlevar Router import
 
 class HomeUI extends ConsumerStatefulWidget {
   const HomeUI({super.key});
@@ -130,6 +129,7 @@ class _HomeScreenState extends ConsumerState<HomeUI> {
         .toList();
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: Text(
           'StreamLine',
@@ -143,7 +143,9 @@ class _HomeScreenState extends ConsumerState<HomeUI> {
       body: LayoutBuilder(
         // Use LayoutBuilder to get constraints
         builder: (context, constraints) {
-          final isLandscape = constraints.maxWidth > constraints.maxHeight;
+          // Use MediaQuery orientation for a more stable check
+          final isLandscape =
+              MediaQuery.of(context).orientation == Orientation.landscape;
 
           // Build the main page content
           final pageView = PageView(
@@ -181,15 +183,15 @@ class _HomeScreenState extends ConsumerState<HomeUI> {
                 NavigationRail(
                   // Adjust groupAlignment to space items vertically
                   groupAlignment: 0.0, // Center alignment might spread items
-                  
+
                   selectedIndex: _currentIndex,
                   onDestinationSelected: (index) {
                     _pageController.animateToPage(
+                      // Keep PageView sync if needed, or remove if GoRouter handles state
                       index,
-                      duration: const Duration(milliseconds: 400),
-                      curve: Curves.easeOutCubic,
+                      duration: const Duration(milliseconds: 300),
+                      curve: Curves.easeInOut,
                     );
-                    // setState is handled by onPageChanged
                   },
                   labelType: NavigationRailLabelType
                       .selected, // Show labels when selected
@@ -238,6 +240,7 @@ class _HomeScreenState extends ConsumerState<HomeUI> {
                 currentIndex: _currentIndex,
                 onTap: (index) {
                   _pageController.animateToPage(
+                    // Keep PageView sync if needed, or remove if GoRouter handles state
                     index,
                     duration: const Duration(milliseconds: 400),
                     curve: Curves.easeOutCubic,
@@ -294,24 +297,25 @@ class _HomeScreenState extends ConsumerState<HomeUI> {
                 titles: titles,
                 descriptions: descriptions,
                 onTap: (index) {
-                  // Add onTap handler
-                  final media = carouselMedia[index]; // Use carouselMedia
-                  // Use mediaType from the specific media item
-                  final mediaType =
-                      media.mediaType ?? 'movie'; // Default to movie if null
+                  final media = carouselMedia[index];
+                  final mediaType = media.mediaType ?? 'movie';
                   if (media.id != null) {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => MediaUI(
-                          mediaType, // Pass the correct media type
-                          media.id!,
-                        ), // Pass ID and type
-                      ),
+                    // Use Qlevar Router to navigate to media details
+                    QR.toName(
+                      'mediaDetails',
+                      params: {
+                        'mediaType': mediaType,
+                        'id': media.id.toString(),
+                      },
                     );
+                    // Navigator.push(
+                    //   context,
+                    //   MaterialPageRoute(
+                    //     builder: (context) => MediaUI(mediaType, media.id!),
+                    //   ),
+                    // );
                   } else {
                     log("Media ID is null, cannot navigate.");
-                    // Optionally show a snackbar or message to the user
                   }
                 },
               )
@@ -383,14 +387,18 @@ class _HomeScreenState extends ConsumerState<HomeUI> {
               ),
               TextButton(
                 onPressed: () {
-                  // Navigate to TrendingUI, passing the mediaType
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => TrendingUI(mediaType: mediaType),
-                    ),
+                  // Use Qlevar Router to navigate to the trending page
+                  QR.toName(
+                    'trending',
+                    params: {'mediaType': mediaType}, // Pass the mediaType
                   );
-                  log('View All $title tapped, navigating to TrendingUI');
+                  // Navigator.push(
+                  //   context,
+                  //   MaterialPageRoute(
+                  //     builder: (context) => TrendingUI(mediaType: mediaType),
+                  //   ),
+                  // );
+                  log('View All $title tapped, navigating to TrendingUI via GoRouter');
                 },
                 child: Text(
                   'View All',
@@ -423,42 +431,61 @@ class _HomeScreenState extends ConsumerState<HomeUI> {
                     return GestureDetector(
                       onTap: () {
                         if (media.id != null) {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => MediaUI(
-                                mediaType, // Use the passed mediaType
-                                media.id!,
-                              ),
-                            ),
+                          // Use Qlevar Router to navigate to media details
+                          QR.toName(
+                            'mediaDetails',
+                            params: {
+                              'mediaType': mediaType,
+                              'id': media.id.toString(),
+                            },
                           );
-                        } else {
-                          log("$title ID is null, cannot navigate.");
+                          // Navigator.push(
+                          //   context,
+                          //   MaterialPageRoute(
+                          //     builder: (context) => MediaUI(mediaType, media.id!),
+                          //   ),
+                          // );
                         }
                       },
                       child: Container(
                         width: itemWidth, // Use adjusted width
                         margin: EdgeInsets.only(right: 12.0),
-                        decoration: BoxDecoration(
-                          color: Colors.grey[850],
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(12),
-                          child: imageUrl != null
-                              ? CachedNetworkImage(
-                                  imageUrl: imageUrl,
-                                  fit: BoxFit.cover,
-                                  placeholder: (context, url) => Center(
-                                      child: CircularProgressIndicator(
-                                          strokeWidth: 2.0)),
-                                  errorWidget: (context, url, error) => Center(
-                                      child: Icon(Icons.error,
-                                          color: Colors.white54)),
-                                )
-                              : Center(
-                                  child: Text('No Image',
-                                      style: TextStyle(color: Colors.white54))),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Expanded(
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(8.0),
+                                child: imageUrl != null
+                                    ? CachedNetworkImage(
+                                        imageUrl: imageUrl,
+                                        fit: BoxFit.cover,
+                                        width: double.infinity,
+                                        placeholder: (context, url) => Center(
+                                            child: CircularProgressIndicator()),
+                                        errorWidget: (context, url, error) =>
+                                            Container(
+                                          color: Colors.grey[300],
+                                          child: Icon(Icons.image_not_supported,
+                                              color: Colors.grey[600]),
+                                        ),
+                                      )
+                                    : Container(
+                                        color: Colors.grey[300],
+                                        child: Icon(Icons.image_not_supported,
+                                            color: Colors.grey[600]),
+                                      ),
+                              ),
+                            ),
+                            SizedBox(height: 8),
+                            Text(
+                              media.title ?? media.name ?? 'No Title',
+                              style: GoogleFonts.quicksand(
+                                  fontSize: 14, fontWeight: FontWeight.w600),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
                         ),
                       ),
                     );

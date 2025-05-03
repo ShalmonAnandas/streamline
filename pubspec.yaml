@@ -29,6 +29,7 @@ dependencies:
   smooth_page_indicator: ^1.2.1
   shimmer: ^3.0.0
   http: ^1.3.0
+  qlevar_router: ^1.12.1
 
   #melos
   melos: ^6.0.0

@@ -2,16 +2,9 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-// Add import for Amicons
 import 'package:amicons/amicons.dart';
-// Removed unused import: streamline/core/base_widget/riverpod_stateless_widget.dart
-// Add import for MediaUI
 import 'package:streamline/src/features/movie_mode/media/media_ui.dart';
 import 'package:streamline/src/features/movie_mode/search/search_provider.dart';
-// Import the custom RiverpodStatelessWidget if it's still needed elsewhere or refactor its usage
-// Assuming RiverpodStatelessWidget is defined in a different path or refactored
-// For simplicity, directly using Consumer widget here if RiverpodStatelessWidget is complex
-// If RiverpodStatelessWidget is simple, ensure its import path is correct.
 
 class SearchUi extends ConsumerStatefulWidget {
   const SearchUi({super.key});
@@ -27,11 +20,11 @@ class _SearchUiState extends ConsumerState<SearchUi> {
 
   @override
   Widget build(BuildContext context) {
-    final orientation = MediaQuery.of(context).orientation;
     final searchResults =
         ref.watch(searchProvider(query: _query)); // Watch the provider directly
 
     return Scaffold(
+      resizeToAvoidBottomInset: false, // Prevent resizing when keyboard appears
       appBar: AppBar(
         forceMaterialTransparency: true,
         elevation: 0, // Add slight elevation
@@ -58,8 +51,9 @@ class _SearchUiState extends ConsumerState<SearchUi> {
                       setState(() {
                         _query = ''; // Clear the debounced query as well
                       });
-                      if (_debounce?.isActive ?? false)
+                      if (_debounce?.isActive ?? false) {
                         _debounce!.cancel(); // Cancel debounce on clear
+                      }
                     },
                   )
                 : null, // Show clear button only when text exists
@@ -139,8 +133,10 @@ class _SearchUiState extends ConsumerState<SearchUi> {
                     );
                   }
 
-                  final int crossAxisCount =
-                      orientation == Orientation.landscape ? 7 : 3;
+                  // Determine crossAxisCount based on screen width for better responsiveness
+                  final screenWidth = MediaQuery.of(context).size.width;
+                  // Adjust breakpoint (e.g., 600) as needed for your design
+                  final int crossAxisCount = screenWidth > 600 ? 7 : 3;
                   return GridView.builder(
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: crossAxisCount,
@@ -158,15 +154,14 @@ class _SearchUiState extends ConsumerState<SearchUi> {
                       return GestureDetector(
                         onTap: () {
                           if (item.mediaType != null && item.id != null) {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => MediaUI(
-                                  item.mediaType!,
-                                  item.id!,
-                                ),
-                              ),
-                            );
+                            // Use context.go or context.push for navigation
+                            // context.goNamed(
+                            //   'mediaDetails',
+                            //   pathParameters: {
+                            //     'mediaType': item.mediaType!,
+                            //     'id': item.id!.toString(),
+                            //   },
+                            // );
                           } else {
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
