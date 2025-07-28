@@ -1,5 +1,5 @@
-package com.shalmon.streamline
+package com.example.streamline
 
 import io.flutter.embedding.android.FlutterActivity
 
-class MainActivity: FlutterActivity()
+class MainActivity : FlutterActivity()
