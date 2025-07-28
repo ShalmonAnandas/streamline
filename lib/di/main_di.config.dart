@@ -38,6 +38,22 @@ import 'package:streamline/domain/usecases/anime/anime_api_live_check.dart'
     as _i860;
 import 'package:streamline/domain/usecases/cinemeta/cinemeta_api_live_check.dart'
     as _i759;
+import 'package:streamline/domain/usecases/cinemeta/cinemeta_get_movie_details.dart'
+    as _i381;
+import 'package:streamline/domain/usecases/cinemeta/cinemeta_get_popular_movies.dart'
+    as _i887;
+import 'package:streamline/domain/usecases/cinemeta/cinemeta_get_popular_series.dart'
+    as _i617;
+import 'package:streamline/domain/usecases/cinemeta/cinemeta_get_series_details.dart'
+    as _i752;
+import 'package:streamline/domain/usecases/cinemeta/cinemeta_get_top_movies.dart'
+    as _i2;
+import 'package:streamline/domain/usecases/cinemeta/cinemeta_get_top_series.dart'
+    as _i36;
+import 'package:streamline/domain/usecases/cinemeta/cinemeta_search_movie.dart'
+    as _i783;
+import 'package:streamline/domain/usecases/cinemeta/cinemeta_search_series.dart'
+    as _i382;
 
 extension GetItInjectableX on _i174.GetIt {
 // initializes the registration of main-scope dependencies inside of GetIt
@@ -112,8 +128,24 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i327.AnimeRepositoryImpl(gh<_i22.AnimeRemoteDatasource>()));
     gh.factory<_i527.CinemetaRepository>(() =>
         _i336.CinemetaRepositoryImpl(gh<_i389.CinemetaRemoteDatasource>()));
+    gh.factory<_i2.GetTopMoviesUsecase>(
+        () => _i2.GetTopMoviesUsecase(gh<_i527.CinemetaRepository>()));
+    gh.factory<_i381.GetMovieDetailsUsecase>(
+        () => _i381.GetMovieDetailsUsecase(gh<_i527.CinemetaRepository>()));
+    gh.factory<_i382.SearchSeriesUsecase>(
+        () => _i382.SearchSeriesUsecase(gh<_i527.CinemetaRepository>()));
+    gh.factory<_i752.GetSeriesDetailsUsecase>(
+        () => _i752.GetSeriesDetailsUsecase(gh<_i527.CinemetaRepository>()));
+    gh.factory<_i617.GetPopularSeriesUsecase>(
+        () => _i617.GetPopularSeriesUsecase(gh<_i527.CinemetaRepository>()));
     gh.factory<_i759.CinemetaApiLiveCheckUsecase>(() =>
         _i759.CinemetaApiLiveCheckUsecase(gh<_i527.CinemetaRepository>()));
+    gh.factory<_i783.SearchMovieUsecase>(
+        () => _i783.SearchMovieUsecase(gh<_i527.CinemetaRepository>()));
+    gh.factory<_i887.GetPopularMoviesUsecase>(
+        () => _i887.GetPopularMoviesUsecase(gh<_i527.CinemetaRepository>()));
+    gh.factory<_i36.GetTopSeriesUsecase>(
+        () => _i36.GetTopSeriesUsecase(gh<_i527.CinemetaRepository>()));
     gh.factory<_i860.AnimeApiLiveCheckUsecase>(
         () => _i860.AnimeApiLiveCheckUsecase(gh<_i243.AnimeRepository>()));
     return this;
